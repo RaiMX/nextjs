@@ -5,6 +5,9 @@ import {useRouter} from 'next/router'
 import {AppContext, AppDispatchContext} from "providers/app_provider";
 import MainMenu from "../menu/MainMenu";
 
+/** THIRD PARTY */
+import {FormattedMessage} from 'react-intl';
+
 /** MATERIAL */
 import clsx from 'clsx';
 import {makeStyles, Drawer, IconButton, Divider} from "@material-ui/core";
@@ -85,10 +88,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const menu = [{
-    name: 'About',
-    to: '/about'
-}]
 
 export default function MainSidebar() {
     const classes = useStyles();
@@ -96,6 +95,11 @@ export default function MainSidebar() {
     const router = useRouter()
     const app_context = React.useContext(AppContext);
     const {setAppConf} = React.useContext(AppDispatchContext);
+
+    const menu = [{
+        name: <FormattedMessage defaultMessage="О Нас"/>,
+        to: '/about'
+    }]
 
     React.useEffect(() => {
         setAppConf(conf => ({...conf, sidebar_open: false}));

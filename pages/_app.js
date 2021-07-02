@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import Router from 'next/router';
+import Router, {useRouter} from 'next/router';
 
 /** COMPONENTS */
 import {AppProvider, AppContext, AppDispatchContext} from 'providers/app_provider';
@@ -13,6 +13,7 @@ import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NProgress from 'nprogress';
 import 'public/css/nprogress.css';
+import {IntlProvider, FormattedMessage} from 'react-intl';
 
 /** MATERIAL */
 import {ThemeProvider, makeStyles} from '@material-ui/core/styles';
@@ -50,9 +51,26 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function MyApp(props) {
+const languages = {
+    ru: require('content/locales/ru.json'),
+    kk: require('content/locales/kk.json')
+};
+
+export default function MyApp({Component, pageProps}) {
     const classes = useStyles();
-    const {Component, pageProps} = props;
+    const {locale, defaultLocale} = useRouter();
+    const [shortLocale] = locale ? locale.split("-") : ["ru"];
+
+    const messages = React.useMemo(() => {
+        switch (shortLocale) {
+            case "ru":
+                return languages.ru;
+            case "kk":
+                return languages.kk;
+            default:
+                return languages.ru;
+        }
+    }, [shortLocale]);
 
     React.useEffect(() => {
         // Remove the server-side injected CSS.
@@ -74,12 +92,21 @@ export default function MyApp(props) {
             <AppProvider>
                 <ThemeProvider theme={theme}>
                     <CssBaseline/>
-                    <MainToolbar/>
-                    <MainSidebar/>
                     <div className={classes.appBarSpacer}/>
-                    <Container maxWidth="xl" className={classes.container + ' pages-content'}>
-                        <Component {...pageProps} />
-                    </Container>
+
+                    <IntlProvider
+                        locale={shortLocale}
+                        messages={messages}
+                        onError={() => null}
+                    >
+                        <MainToolbar/>
+                        <MainSidebar/>
+                        <Container maxWidth="xl" className={classes.container + ' pages-content'}>
+                            <Component {...pageProps} />
+                        </Container>
+                    </IntlProvider>
+
+
                 </ThemeProvider>
             </AppProvider>
 

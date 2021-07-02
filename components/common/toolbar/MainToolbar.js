@@ -2,6 +2,7 @@ import React from 'react';
 
 /** COMPONENTS */
 import {AppContext, AppDispatchContext} from "providers/app_provider";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 /** MATERIAL */
 import clsx from 'clsx';
@@ -111,6 +112,8 @@ export default function MainToolbar() {
                 <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                     Page Name
                 </Typography>
+
+                <LanguageSwitcher/>
 
                 {/*<Typography*/}
                 {/*    onMouseOver={handleProfileShow}*/}

@@ -15,14 +15,23 @@
 		"nprogress": "^0.2.0",
 		"prop-types": "latest",
 		"react": "latest",
+		"react-cookie": "^4.0.3",
 		"react-dom": "latest",
 		"react-draft-wysiwyg": "^1.14.7",
+		"react-intl": "^5.20.4",
 		"react-toastify": "^7.0.4"
 	},
 	"scripts": {
 		"dev": "next",
-		"build": "next build",
+		"build": "npm run i18n && next build",
 		"start": "next start",
+		"extract:i18n": "formatjs extract '{pages,components,sections}/**/*.{js,ts,tsx}' --format simple --id-interpolation-pattern '[sha512:contenthash:base64:6]' --out-file content/locales/ru.json",
+		"compile:i18n": "formatjs compile-folder --ast --format simple content/locales content/compiled-locales",
+		"i18n": "npm run extract:i18n && npm run compile:i18n",
 		"post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+	},
+	"devDependencies": {
+		"@formatjs/cli": "^4.2.24",
+		"babel-plugin-formatjs": "^10.3.1"
 	}
 }

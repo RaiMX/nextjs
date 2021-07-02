@@ -85,25 +85,4 @@ export default function Index() {
             />
         </>
     )
-
-    // return (
-    //     <Container maxWidth="xl" className={classes.container + ' pages-content'}>
-    //         <Editor
-    //             style={{float: 'left', marginRight: '50px'}}
-    //             value={raw_text}
-    //             onChange={(content) => {
-    //                 const data = JSON.parse(JSON.stringify(content));
-    //                 setRawText(content)
-    //             }}
-    //         />
-    //
-    //         <MyForm
-    //             // style={{float: 'right'}}
-    //             value={raw_text}
-    //             onChange={(content) => {
-    //
-    //             }}
-    //         />
-    //     </Container>
-    // );
 }

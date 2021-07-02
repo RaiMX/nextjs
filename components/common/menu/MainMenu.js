@@ -3,6 +3,9 @@ import React from 'react';
 // import {Link as RouterLink} from 'react-router-dom';
 import Link from 'components/mods/nextjs/Link';
 
+/** THIRD PARTY */
+import {FormattedMessage} from 'react-intl';
+
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -113,7 +116,7 @@ export default function MainMenu({menu_items = []}) {
         <div className={classes.root}>
             <Paper elevation={0}>
                 <List aria-label="main">
-                    <ListItemLink key={'/'} to={'/'} primary={'Главная'} icon={<InboxIcon/>}/>
+                    <ListItemLink key={'/'} to={'/'} primary={<FormattedMessage defaultMessage="Главная"/>} icon={<InboxIcon/>}/>
                     {menu_items.map(item => {
                         if (item?.hidden) {
                             return null;

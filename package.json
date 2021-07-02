@@ -1,0 +1,28 @@
+{
+	"name": "nextjs",
+	"version": "4.0.0",
+	"private": true,
+	"dependencies": {
+		"@fontsource/roboto": "latest",
+		"@material-ui/core": "latest",
+		"@material-ui/icons": "latest",
+		"clsx": "latest",
+		"date-fns": "^2.22.1",
+		"draft-js": "^0.11.7",
+		"immutable": "^4.0.0-rc.12",
+		"material-table": "^1.69.3",
+		"next": "latest",
+		"nprogress": "^0.2.0",
+		"prop-types": "latest",
+		"react": "latest",
+		"react-dom": "latest",
+		"react-draft-wysiwyg": "^1.14.7",
+		"react-toastify": "^7.0.4"
+	},
+	"scripts": {
+		"dev": "next",
+		"build": "next build",
+		"start": "next start",
+		"post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+	}
+}

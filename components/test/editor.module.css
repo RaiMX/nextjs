@@ -1,0 +1,7 @@
+.placeholder-ul {
+    visibility: hidden;
+}
+
+.placeholder-li:hover {
+    background: #F1F1F1;
+}

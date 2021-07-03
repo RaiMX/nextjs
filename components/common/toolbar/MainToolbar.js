@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
         display: 'none',
     },
     title: {
+        marginRight: '20px',
+    },
+    spacer: {
         flexGrow: 1,
     },
     drawerPaper: {
@@ -91,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
 export default function MainToolbar() {
     const classes = useStyles();
 
-    const app_context = React.useContext(AppContext);
+    const {app_conf, toolbar_tools} = React.useContext(AppContext);
     const {setAppConf} = React.useContext(AppDispatchContext);
 
     return (
@@ -103,16 +106,17 @@ export default function MainToolbar() {
                         color="inherit"
                         aria-label="open drawer"
                         onClick={() => setAppConf(conf => ({...conf, sidebar_open: true}))}
-                        className={clsx(classes.menuButton, app_context.sidebar_open && classes.menuButtonHidden)}
+                        className={clsx(classes.menuButton, app_conf.sidebar_open && classes.menuButtonHidden)}
                     >
                         <MenuIcon/>
                     </IconButton>
                 </Tooltip>
 
                 <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                    Page Name
+                    {app_conf.route_name}
                 </Typography>
 
+                <div className={classes.spacer}/>
                 <LanguageSwitcher/>
 
                 {/*<Typography*/}
@@ -257,5 +261,5 @@ export default function MainToolbar() {
 
             </Toolbar>
         </AppBar>
-    )
+    );
 }

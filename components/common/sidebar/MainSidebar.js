@@ -2,8 +2,9 @@ import React from 'react'
 import {useRouter} from 'next/router'
 
 /** COMPONENTS */
+import {makeTree} from "utils/data_utils";
 import {AppContext, AppDispatchContext} from "providers/app_provider";
-import MainMenu from "../menu/MainMenu";
+import NestedListMenu from "../menu/NestedListMenu";
 
 /** THIRD PARTY */
 import {FormattedMessage} from 'react-intl';
@@ -88,18 +89,37 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const menu = [
+    {
+        id: 1,
+        parent: null,
+        name: 'О Нас',
+        name_kk: 'Биз туралы',
+        to: '/about'
+    },
+    {
+        id: 2,
+        parent: null,
+        name: 'Бланки',
+        name_kk: 'Бланки',
+        to: '/blanks'
+    },
+    {
+        id: 3,
+        parent: 2,
+        name: 'Создание нового бланка',
+        name_kk: 'Создание нового бланка',
+        to: '/blanks/create'
+    },
+]
+
 
 export default function MainSidebar() {
     const classes = useStyles();
 
     const router = useRouter()
-    const app_context = React.useContext(AppContext);
+    const {app_conf} = React.useContext(AppContext);
     const {setAppConf} = React.useContext(AppDispatchContext);
-
-    const menu = [{
-        name: <FormattedMessage defaultMessage="О Нас"/>,
-        to: '/about'
-    }]
 
     React.useEffect(() => {
         setAppConf(conf => ({...conf, sidebar_open: false}));
@@ -111,7 +131,7 @@ export default function MainSidebar() {
             classes={{
                 paper: clsx(classes.drawerPaper),
             }}
-            open={app_context.sidebar_open}
+            open={app_conf.sidebar_open}
             onClose={() => setAppConf(conf => ({...conf, sidebar_open: false}))}
         >
             <div className={classes.toolbarIcon}>
@@ -120,7 +140,7 @@ export default function MainSidebar() {
                 </IconButton>
             </div>
             <Divider/>
-            <MainMenu menu_items={menu}/>
+            <NestedListMenu menu_items={makeTree(menu, 'id', 'parent')}/>
         </Drawer>
     )
 }

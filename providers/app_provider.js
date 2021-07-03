@@ -12,8 +12,10 @@ export const AppProvider = ({children}) => {
 
     const [app_conf, setAppConf] = useState({
         locale: locale,
-        sidebar_open: false,
         route_name: 'Главная',
+        sidebar_open: false,
+        toolbar_show: true,
+        toolbar_tools: {},
     });
 
     React.useEffect(() => {
@@ -22,9 +24,11 @@ export const AppProvider = ({children}) => {
     }, [])
 
     return (
-        <AppContext.Provider value={app_conf}>
+        <AppContext.Provider value={{
+            app_conf,
+        }}>
             <AppDispatchContext.Provider value={{
-                setAppConf
+                setAppConf,
             }}>
                 {children}
             </AppDispatchContext.Provider>

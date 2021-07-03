@@ -22,9 +22,7 @@ import IconExpandLess from '@material-ui/icons/ExpandLess';
 import IconExpandMore from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        width: 360,
-    },
+    root: {},
     nested: {
         paddingLeft: theme.spacing(4),
     },
@@ -54,7 +52,7 @@ function ListItemLink(props) {
 
 ListItemLink.propTypes = {
     icon: PropTypes.element,
-    primary: PropTypes.string.isRequired,
+    primary: PropTypes.any.isRequired,
     to: PropTypes.string.isRequired,
 };
 
@@ -109,7 +107,7 @@ const AppMenuItem = props => {
     )
 }
 
-export default function MainMenu({menu_items = []}) {
+export default function NestedListMenu({menu_items = []}) {
     const classes = useStyles();
 
     return (

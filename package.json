@@ -9,6 +9,7 @@
 		"clsx": "latest",
 		"date-fns": "^2.22.1",
 		"draft-js": "^0.11.7",
+		"draftjs-utils": "^0.10.2",
 		"immutable": "^4.0.0-rc.12",
 		"material-table": "^1.69.3",
 		"next": "latest",
@@ -19,7 +20,8 @@
 		"react-dom": "latest",
 		"react-draft-wysiwyg": "^1.14.7",
 		"react-intl": "^5.20.4",
-		"react-toastify": "^7.0.4"
+		"react-toastify": "^7.0.4",
+		"uuid": "^8.3.2"
 	},
 	"scripts": {
 		"dev": "next",

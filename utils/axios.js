@@ -70,7 +70,7 @@ const consoleResponseError = error => {
 }
 
 const api = axios.create({
-    baseURL: `http://${window.location.hostname}:${process.env.REACT_APP_NGINX_PORT}/`
+    baseURL: `http://${process.env.HOST_IP}:${process.env.HOST_PORT}/`
 });
 
 api.interceptors.request.use(addToken);

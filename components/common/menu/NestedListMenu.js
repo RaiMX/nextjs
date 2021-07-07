@@ -114,7 +114,7 @@ export default function NestedListMenu({menu_items = []}) {
         <div className={classes.root}>
             <Paper elevation={0}>
                 <List aria-label="main">
-                    <ListItemLink key={'/'} to={'/'} primary={<FormattedMessage defaultMessage="Главная"/>} icon={<InboxIcon/>}/>
+                    <ListItemLink key={'/'} to={'/'} primary={<FormattedMessage defaultMessage="Главная"/>}/>
                     {menu_items.map(item => {
                         if (item?.hidden) {
                             return null;

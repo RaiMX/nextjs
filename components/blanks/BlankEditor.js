@@ -1,46 +1,55 @@
-import React, {Component} from 'react';
+import React from 'react';
 import dynamic from "next/dynamic";
 
 /** COMPONENTS */
+import {useStore} from 'store/store_provider'
 import * as CONSTANTS from "./CONSTANTS";
-import Suggestions from './Suggestions'
 import {decorators} from './decorators/editor_decorators'
-import {renderPlaceholderText, getTriggerRange, getInsertRange} from "./helpers/editor_helpers";
-
+import {getTriggerRange, renderPlaceholderText} from "./helpers/editor_helpers";
+import EntityProperties from "./EntityProperties";
 
 /** THIRD PARTY */
-import {EditorState, Modifier, CompositeDecorator, ContentState, convertFromRaw, convertToRaw} from 'draft-js';
-
-const Editor = dynamic(
-    () => import('react-draft-wysiwyg').then(mod => mod.Editor),
-    {ssr: false}
-)
+import {convertFromRaw, convertToRaw, EditorState, Modifier} from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import {v4} from 'uuid';
 import {FormattedMessage} from 'react-intl';
 
 /** MATERIAL */
-import {Drawer, Button, Grid, Paper, Typography} from "@material-ui/core";
+import {Divider, Drawer, Grid, IconButton, makeStyles, Typography} from "@material-ui/core";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import {observer} from "mobx-react-lite";
+
+
+const Editor = dynamic(
+    () => import('react-draft-wysiwyg').then(mod => mod.Editor),
+    {ssr: false}
+)
 
 function ToolbarTextFieldButton({editorState, onChange}) {
+    const {blanksStore} = useStore();
+
     const addTextFieldPlaceholder = () => {
+        const entity_code = v4();
+        const field_type = CONSTANTS.FIELD_TYPES.find(x => x.code === CONSTANTS.TYPE_TEXT_FIELD)
+        const placeholder = field_type.label.toLocaleUpperCase();
+        blanksStore.addEntity(entity_code, CONSTANTS.TYPE_TEXT_FIELD, placeholder)
+
         const contentState = editorState.getCurrentContent();
         const contentStateWithEntity = contentState.createEntity(
             'PLACEHOLDER',
             'IMMUTABLE',
             {
-                type: CONSTANTS.TYPE_TEXT_FIELD,
-                code: v4(),
-                placeholder: CONSTANTS.PLACEHOLDER_TEXT_TEXT_FIELD,
+                code: entity_code,
             },
         );
 
         const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
+
         let newContentState = Modifier.replaceText(
             contentStateWithEntity,
             editorState.getSelection(),
-            `${CONSTANTS.PLACEHOLDER_TRIGGER}${CONSTANTS.PLACEHOLDER_TEXT_TEXT_FIELD}${CONSTANTS.PLACEHOLDER_CLOSER} `,
+            `${CONSTANTS.PLACEHOLDER_TRIGGER}${placeholder}${CONSTANTS.PLACEHOLDER_CLOSER} `,
             null,
             entityKey,
         );
@@ -59,16 +68,21 @@ function ToolbarTextFieldButton({editorState, onChange}) {
     );
 }
 
-function ToolbarSelectButton({editorState, onChange}) {
-    const addSelectFieldPlaceholder = () => {
+function ToolbarNumberFieldButton({editorState, onChange}) {
+    const {blanksStore} = useStore();
+
+    const addTextFieldPlaceholder = () => {
+        const entity_code = v4();
+        const field_type = CONSTANTS.FIELD_TYPES.find(x => x.code === CONSTANTS.TYPE_NUMBER_FIELD)
+        const placeholder = field_type.label.toLocaleUpperCase();
+        blanksStore.addEntity(entity_code, CONSTANTS.TYPE_NUMBER_FIELD, placeholder)
+
         const contentState = editorState.getCurrentContent();
         const contentStateWithEntity = contentState.createEntity(
             'PLACEHOLDER',
             'IMMUTABLE',
             {
-                type: CONSTANTS.TYPE_SELECT_FIELD,
-                code: v4(),
-                placeholder: CONSTANTS.PLACEHOLDER_TEXT_SELECT_FIELD,
+                code: entity_code,
             },
         );
 
@@ -77,7 +91,51 @@ function ToolbarSelectButton({editorState, onChange}) {
         let newContentState = Modifier.replaceText(
             contentStateWithEntity,
             editorState.getSelection(),
-            `${CONSTANTS.PLACEHOLDER_TRIGGER}${CONSTANTS.PLACEHOLDER_TEXT_SELECT_FIELD}${CONSTANTS.PLACEHOLDER_CLOSER} `,
+            `${CONSTANTS.PLACEHOLDER_TRIGGER}${placeholder}${CONSTANTS.PLACEHOLDER_CLOSER} `,
+            null,
+            entityKey,
+        );
+
+        const newEditorState = EditorState.push(
+            editorState,
+            newContentState,
+            `insert-placeholder`,
+        );
+
+        onChange(newEditorState);
+    }
+
+    return (
+        <div className="rdw-option-wrapper" onClick={addTextFieldPlaceholder}><FormattedMessage defaultMessage="Числовое поле"/></div>
+    );
+}
+
+
+function ToolbarSelectButton({editorState, onChange}) {
+    const {blanksStore} = useStore();
+
+    const addSelectFieldPlaceholder = () => {
+        const contentState = editorState.getCurrentContent();
+
+        const entity_code = v4();
+        const field_type = CONSTANTS.FIELD_TYPES.find(x => x.code === CONSTANTS.TYPE_SELECT_FIELD)
+        const placeholder = field_type.label.toLocaleUpperCase();
+        blanksStore.addEntity(entity_code, CONSTANTS.TYPE_SELECT_FIELD, placeholder);
+
+        const contentStateWithEntity = contentState.createEntity(
+            'PLACEHOLDER',
+            'IMMUTABLE',
+            {
+                code: entity_code,
+            },
+        );
+
+        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
+        let newContentState = Modifier.replaceText(
+            contentStateWithEntity,
+            editorState.getSelection(),
+            `${CONSTANTS.PLACEHOLDER_TRIGGER}${placeholder}${CONSTANTS.PLACEHOLDER_CLOSER} `,
             null,
             entityKey,
         );
@@ -96,7 +154,20 @@ function ToolbarSelectButton({editorState, onChange}) {
     );
 }
 
-export default function BlankEditor({value, onChange, style = {}}) {
+const useStyles = makeStyles((theme) => ({
+    toolbarIcon: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        padding: '0 8px',
+        height: '20px',
+        ...theme.mixins.toolbar,
+    },
+}))
+
+const BlankEditor = observer(function BlankEditor({value, onChange, style = {}}) {
+    const classes = useStyles();
+    const {blanksStore} = useStore();
 
     const getInitialContent = () => value ? EditorState.createWithContent(convertFromRaw(value)) : EditorState.createEmpty()
 
@@ -106,6 +177,7 @@ export default function BlankEditor({value, onChange, style = {}}) {
     const [open_properties, setOpenProperties] = React.useState(false);
 
     const handleCloseDrawer = () => {
+        setEditorState(EditorState.moveSelectionToEnd(editorState));
         setOpenProperties(false);
     }
 
@@ -126,6 +198,8 @@ export default function BlankEditor({value, onChange, style = {}}) {
                 const entity = contentState.getEntity(entity_key);
                 if (entity !== null) {
                     const entity_data = entity.getData();
+
+                    blanksStore.setSelectedEntityCode(entity_data.code);
 
                     setEditorState(EditorState.moveSelectionToEnd(editorState));
                     setOpenProperties(true);
@@ -175,6 +249,7 @@ export default function BlankEditor({value, onChange, style = {}}) {
                 }}
                 toolbarCustomButtons={[
                     <ToolbarTextFieldButton/>,
+                    <ToolbarNumberFieldButton/>,
                     <ToolbarSelectButton/>
                 ]}
             />
@@ -188,21 +263,22 @@ export default function BlankEditor({value, onChange, style = {}}) {
                 style={{width: '350px'}}
             >
                 {properties !== null ? (
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                    >
-                        <Grid item xs={12} md={12}>
+                    <>
+                        <div className={classes.toolbarIcon}>
+                            <IconButton onClick={handleCloseDrawer}>
+                                <ChevronRightIcon/>
+                            </IconButton>
                             <Typography><FormattedMessage defaultMessage="Свойства" id="properties"/></Typography>
-                            <Typography>{properties.placeholder}</Typography>
-                        </Grid>
-                    </Grid>
+                        </div>
+                        <Divider/>
+                        <EntityProperties/>
+                    </>
                 ) : null}
 
             </Drawer>
 
         </div>
     );
-}
+})
+
+export default BlankEditor;

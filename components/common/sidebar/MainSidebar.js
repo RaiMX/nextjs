@@ -1,5 +1,5 @@
 import React from 'react'
-import {useRouter} from 'next/router'
+import Router, {useRouter} from 'next/router';
 
 /** COMPONENTS */
 import {makeTree} from "utils/data_utils";
@@ -11,7 +11,7 @@ import {FormattedMessage} from 'react-intl';
 
 /** MATERIAL */
 import clsx from 'clsx';
-import {makeStyles, Drawer, IconButton, Divider} from "@material-ui/core";
+import {makeStyles, Drawer, IconButton, Divider, Typography} from "@material-ui/core";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 const useStyles = makeStyles((theme) => ({
@@ -122,8 +122,10 @@ export default function MainSidebar() {
     const {setAppConf} = React.useContext(AppDispatchContext);
 
     React.useEffect(() => {
-        setAppConf(conf => ({...conf, sidebar_open: false}));
-    }, [router.pathname]);
+		Router.events.on('routeChangeStart', (url) => {
+			setAppConf(conf => ({...conf, sidebar_open: false}));
+		});
+	}, [])
 
     return (
         <Drawer
@@ -135,9 +137,10 @@ export default function MainSidebar() {
             onClose={() => setAppConf(conf => ({...conf, sidebar_open: false}))}
         >
             <div className={classes.toolbarIcon}>
-                <IconButton onClick={() => setAppConf(conf => ({...conf, sidebar_open: false}))}>
-                    <ChevronLeftIcon/>
-                </IconButton>
+				<Typography><FormattedMessage defaultMessage="Главное меню" id="properties"/></Typography>
+				<IconButton onClick={() => setAppConf(conf => ({...conf, sidebar_open: false}))}>
+					<ChevronLeftIcon/>
+				</IconButton>
             </div>
             <Divider/>
             <NestedListMenu menu_items={makeTree(menu, 'id', 'parent')}/>

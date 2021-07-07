@@ -1,5 +1,15 @@
 import React from "react";
 
+/** COMPONENTS */
+import * as CONSTANTS from "../CONSTANTS"
+import {useStore} from 'store/store_provider'
+
+/** THIRD PARTY */
+import {observer} from 'mobx-react-lite'
+
+/** MATERIAL */
+import {TextField, Select, MenuItem} from '@material-ui/core'
+
 const findPlaceholderEntities = (contentBlock, callback, contentState) => {
     contentBlock.findEntityRanges(
         (character) => {
@@ -14,30 +24,23 @@ const findPlaceholderEntities = (contentBlock, callback, contentState) => {
     );
 };
 
-const Hashtag = ({children, entityKey, contentState}) => {
+const PlaceholderEditorComponent = observer(function PlaceholderEditorComponent({children, entityKey, contentState}) {
+    const {blanksStore} = useStore()
 
     const entity = contentState.getEntity(entityKey);
     const type = entity.getType();
     const data = entity.getData();
 
-    console.log('entity', entity);
-    console.log('type', type);
-    console.log('data', data);
-
-    // if (data.type === 'list') {
-    //     return (
-    //         <span style={{background: 'lightBlue'}}><InlineDropdown/></span>
-    //     );
-    // }
+    const entity_props = blanksStore.entities_props[data.code];
 
     return (
         <span style={{background: '#e3e1e1'}}>{children}</span>
     );
-};
+})
 
 export const decorators = [
     {
         strategy: findPlaceholderEntities,
-        component: Hashtag,
+        component: PlaceholderEditorComponent,
     }
 ]

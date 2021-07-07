@@ -8,6 +8,8 @@ import BlankPreview from 'components/blanks/BlankPreview'
 
 /** THIRD PARTY */
 import {FormattedMessage} from 'react-intl';
+import {observer} from 'mobx-react-lite'
+import {useStore} from "store/store_provider";
 
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
@@ -49,17 +51,32 @@ TabPanel.propTypes = {
     value: PropTypes.any.isRequired,
 };
 
-export default function BlankCreate() {
+const BlankCreate = observer(function BlankCreate() {
     const classes = useStyles();
+
+    const {blanksStore} = useStore()
 
     const {app_conf} = React.useContext(AppContext);
     const {setAppConf} = React.useContext(AppDispatchContext);
 
     const [tab_index, setTabIndex] = React.useState(0);
-    const [raw_text, setRawText] = React.useState();
+    const [content_obj, setContentObj] = React.useState(blanksStore?.editor_state_obj ? blanksStore.editor_state_obj : undefined);
+
+    //start the clock when the component is mounted
+    // React.useEffect(() => {
+    //     store.appStore.start()
+    //
+    //     //stop the clock when the component unmounts
+    //     return () => {
+    //         store.appStore.stop()
+    //     }
+    // }, [store.appStore])
 
     React.useEffect(() => {
 
+        return () => {
+            blanksStore.clearBlank();
+        }
     }, [])
 
     return (
@@ -81,10 +98,13 @@ export default function BlankCreate() {
                         elevation={3}
                     >
                         <BlankEditor
-                            value={raw_text}
-                            onChange={(content) => {
-                                const data = JSON.parse(JSON.stringify(content));
-                                setRawText(content)
+                            value={content_obj}
+                            onChange={(content_obj) => {
+
+                                console.log('content_obj', content_obj);
+
+                                blanksStore.setEditorStateObj(content_obj)
+                                setContentObj(content_obj)
                             }}
                         />
                     </Paper>
@@ -98,7 +118,7 @@ export default function BlankCreate() {
                         className={classes.paper}
                     >
                         <BlankPreview
-                            value={raw_text}
+                            value={content_obj}
                             onChange={(content) => {
 
                             }}
@@ -108,4 +128,6 @@ export default function BlankCreate() {
             </Grid>
         </Grid>
     );
-}
+})
+
+export default BlankCreate;

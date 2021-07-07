@@ -6,6 +6,7 @@ import Router, {useRouter} from 'next/router';
 /** COMPONENTS */
 import {AppProvider, AppContext, AppDispatchContext} from 'providers/app_provider';
 import Layout from 'layout/Layout';
+import {StoreProvider} from 'store/store_provider'
 
 /** THIRD PARTY */
 import {ToastContainer, toast} from 'react-toastify';
@@ -13,6 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import NProgress from 'nprogress';
 import 'public/css/nprogress.css';
 import {IntlProvider} from 'react-intl';
+
 
 /** MATERIAL */
 import {ThemeProvider} from '@material-ui/core/styles';
@@ -43,7 +45,7 @@ const languages = {
 };
 
 export default function MyApp({Component, pageProps}) {
-
+    /** LOCALIZATION */
     const {locale, defaultLocale} = useRouter();
     const [shortLocale] = locale ? locale.split("-") : ["ru"];
 
@@ -58,27 +60,33 @@ export default function MyApp({Component, pageProps}) {
         }
     }, [shortLocale]);
 
+    /** END LOCALIZATION */
+
     React.useEffect(() => {
         // Remove the server-side injected CSS.
         const jssStyles = document.querySelector('#jss-server-side');
         if (jssStyles) {
             jssStyles.parentElement.removeChild(jssStyles);
         }
+
     }, []);
 
     return (
         <React.Fragment>
-            <AppProvider>
-                <ThemeProvider theme={theme}>
-                    <IntlProvider
-                        locale={shortLocale}
-                        messages={messages}
-                        onError={() => null}
-                    >
-                        <Layout Component={Component} pageProps={pageProps}/>
-                    </IntlProvider>
-                </ThemeProvider>
-            </AppProvider>
+
+            <StoreProvider {...pageProps}>
+                <AppProvider>
+                    <ThemeProvider theme={theme}>
+                        <IntlProvider
+                            locale={shortLocale}
+                            messages={messages}
+                            onError={() => null}
+                        >
+                            <Layout Component={Component} pageProps={pageProps}/>
+                        </IntlProvider>
+                    </ThemeProvider>
+                </AppProvider>
+            </StoreProvider>
 
             <ToastContainer/>
 

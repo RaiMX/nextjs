@@ -9,6 +9,18 @@
 				"idInterpolationPattern": "[sha512:contenthash:base64:6]",
 				"ast": true
 			}
+		],
+		[
+			"@babel/plugin-proposal-decorators",
+			{
+				"legacy": true
+			}
+		],
+		[
+			"@babel/plugin-proposal-class-properties",
+			{
+				"loose": true
+			}
 		]
 	]
 }

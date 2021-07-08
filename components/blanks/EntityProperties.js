@@ -3,6 +3,10 @@ import React from 'react';
 /** COMPONENTS */
 import {useStore} from 'store/store_provider'
 import * as CONSTANTS from "./CONSTANTS"
+import SelectFieldProperties from "./SelectFieldProperties";
+import TextFieldProperties from "./TextFieldProperties";
+import NumberFieldProperties from "./NumberFieldProperties";
+import TableFieldProperties from "./TableFieldProperties";
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
@@ -12,6 +16,8 @@ import {FormattedMessage} from 'react-intl';
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import {Grid, MenuItem, Select, TextField} from "@material-ui/core";
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,10 +31,6 @@ const EntityProperties = observer(function EntityProperties() {
 	const [entity_code, setEntityCode] = React.useState(null);
 	const [entity_properties, setEntityProperties] = React.useState(null);
 
-	const [entity_type, setEntityType] = React.useState(null);
-
-	const [list_code, setListCode] = React.useState(null);
-
 	React.useEffect(() => {
 		setEntityProperties(blanksStore.entities_props[blanksStore.selected_entity_code])
 		setEntityCode(blanksStore.selected_entity_code);
@@ -38,51 +40,22 @@ const EntityProperties = observer(function EntityProperties() {
 		setEntityProperties(blanksStore.entities_props[blanksStore.selected_entity_code])
 	}, [blanksStore.entities_props[blanksStore.selected_entity_code]])
 
-	React.useEffect(() => {
-		if (entity_properties) {
-			if (entity_properties.type !== entity_type) {
-				setEntityType(entity_properties.type);
-			}
-			if (entity_properties?.list_code !== list_code) {
-				setListCode(entity_properties.list_code);
-			}
+	if (entity_code) {
+		switch (entity_properties.type) {
+			case CONSTANTS.TYPE_SELECT_FIELD:
+				return <SelectFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
+			case CONSTANTS.TYPE_TEXT_FIELD:
+				return <TextFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
+			case CONSTANTS.TYPE_NUMBER_FIELD:
+				return <NumberFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
+			case CONSTANTS.TYPE_TABLE_FIELD:
+				return <TableFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
+			default:
+				return null;
 		}
-	}, [entity_properties])
+	}
 
-	return entity_code ? (
-		<Grid
-			container
-			direction="row"
-			justify="flex-start"
-			alignItems="flex-start"
-		>
-			<Grid item xs={12} md={12}>
-				<TextField
-					disabled={true}
-					label={<FormattedMessage defaultMessage={'Тип'}/>}
-					defaultValue={CONSTANTS.FIELD_TYPES.find(x => x.code === entity_properties.type).label}
-				/>
-
-				{entity_properties.type === CONSTANTS.TYPE_SELECT_FIELD ? (
-					<Select
-						label={<FormattedMessage defaultMessage={'Название списка'}/>}
-						value={list_code || ''}
-						autoWidth
-						onChange={(e) => {
-							blanksStore.setEntityProperty(entity_code, 'list_code', e.target.value);
-							setListCode(e.target.value);
-						}}
-					>
-						{blanksStore.select_lists_names.map((list, index) => (
-							<MenuItem key={index} value={list.code}>{list.label}</MenuItem>
-						))}
-					</Select>
-				) : null}
-
-
-			</Grid>
-		</Grid>
-	) : null
+	return null;
 })
 
 export default EntityProperties

@@ -7,7 +7,8 @@ export const PLACEHOLDER_TEXT_SELECT_FIELD = 'ВЫПАДАЮЩИЙ_СПИСОК'
 
 export const TYPE_TEXT_FIELD = 'text_field'
 export const TYPE_NUMBER_FIELD = 'number_field'
-export const TYPE_SELECT_FIELD = 'select'
+export const TYPE_SELECT_FIELD = 'select_field'
+export const TYPE_TABLE_FIELD = 'table_field'
 
 export const FIELD_TYPES = [
 	{
@@ -21,5 +22,9 @@ export const FIELD_TYPES = [
 	{
 		code: TYPE_SELECT_FIELD,
 		label: 'Выпадающий список',
+	},
+	{
+		code: TYPE_TABLE_FIELD,
+		label: 'Таблица',
 	},
 ]

@@ -4,6 +4,7 @@
 	"private": true,
 	"dependencies": {
 		"@fontsource/roboto": "latest",
+		"@handsontable/react": "^9.0.1",
 		"@material-ui/core": "latest",
 		"@material-ui/icons": "latest",
 		"@reduxjs/toolkit": "^1.6.0",
@@ -12,6 +13,7 @@
 		"date-fns": "^2.22.1",
 		"draft-js": "^0.11.7",
 		"draftjs-utils": "^0.10.2",
+		"handsontable": "^9.0.1",
 		"immutable": "^4.0.0-rc.12",
 		"material-table": "^1.69.3",
 		"mobx": "^6.3.2",

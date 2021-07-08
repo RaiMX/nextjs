@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import dynamic from "next/dynamic";
+import './create.module.css'
 
 /** COMPONENTS */
 import {AppContext, AppDispatchContext} from "providers/app_provider";
@@ -101,7 +103,7 @@ const BlankCreate = observer(function BlankCreate() {
                             value={content_obj}
                             onChange={(content_obj) => {
 
-                                console.log('content_obj', content_obj);
+                                // console.log('content_obj', content_obj);
 
                                 blanksStore.setEditorStateObj(content_obj)
                                 setContentObj(content_obj)

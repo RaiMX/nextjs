@@ -225,6 +225,14 @@ export const makeTreeFromOrdered = (array, code_prop = 'code', parent_prop = 'pa
     return map['-'].children;
 }
 
+/**
+ * Make tree from UNORDERED array of parent child objects
+ * @param array
+ * @param code_prop
+ * @param parent_prop
+ * @param children_prop
+ * @returns {[]}
+ */
 export const makeTree = (array, code_prop = 'code', parent_prop = 'parent_code', children_prop = 'children') => {
     const hashTable = Object.create(null);
     array.forEach(aData => hashTable[aData[code_prop]] = {...aData, [children_prop]: []});

@@ -88,7 +88,7 @@ export default function MyApp({Component, pageProps}) {
                 </AppProvider>
             </StoreProvider>
 
-            <ToastContainer/>
+            <ToastContainer autoClose={10000}/>
 
         </React.Fragment>
     );

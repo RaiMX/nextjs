@@ -21,7 +21,21 @@ export class BlanksStore {
 					label: 'Org 2'
 				},
 			]
-		}
+		},
+		deps: {
+			code: 'deps',
+			label: 'Департаменты',
+			values: [
+				{
+					value: 1,
+					label: 'Деп 1'
+				},
+				{
+					value: 2,
+					label: 'Деп 2'
+				},
+			]
+		},
 	}
 
 	constructor(rootStore) {
@@ -74,6 +88,7 @@ export class BlanksStore {
 				type,
 				placeholder,
 				value: null,
+				allow_null: false
 			}
 
 			return true;

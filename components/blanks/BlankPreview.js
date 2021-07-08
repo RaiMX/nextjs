@@ -7,12 +7,8 @@ import {decorators} from "./decorators/form_decorators";
 /** THIRD PARTY */
 import {EditorState, Modifier, CompositeDecorator, ContentState, convertFromRaw, convertToRaw} from 'draft-js';
 
-const Editor = dynamic(
-    () => import('react-draft-wysiwyg').then(mod => mod.Editor),
-    {ssr: false}
-)
+const Editor = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor), {ssr: false})
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
 
 export default function BlankPreview({value, onChange, style = {}}) {
 

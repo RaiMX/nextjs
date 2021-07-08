@@ -7,6 +7,7 @@ import * as CONSTANTS from "./CONSTANTS";
 import {decorators} from './decorators/editor_decorators'
 import {getTriggerRange, renderPlaceholderText} from "./helpers/editor_helpers";
 import EntityProperties from "./EntityProperties";
+import ToolbarButtonInsertPlaceholder from "./helpers/ToolbarButtonInsertPlaceholder";
 
 /** THIRD PARTY */
 import {convertFromRaw, convertToRaw, EditorState, Modifier} from 'draft-js';
@@ -20,139 +21,9 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import {observer} from "mobx-react-lite";
 
 
-const Editor = dynamic(
-    () => import('react-draft-wysiwyg').then(mod => mod.Editor),
-    {ssr: false}
-)
+const Editor = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor), {ssr: false})
 
-function ToolbarTextFieldButton({editorState, onChange}) {
-    const {blanksStore} = useStore();
-
-    const addTextFieldPlaceholder = () => {
-        const entity_code = v4();
-        const field_type = CONSTANTS.FIELD_TYPES.find(x => x.code === CONSTANTS.TYPE_TEXT_FIELD)
-        const placeholder = field_type.label.toLocaleUpperCase();
-        blanksStore.addEntity(entity_code, CONSTANTS.TYPE_TEXT_FIELD, placeholder)
-
-        const contentState = editorState.getCurrentContent();
-        const contentStateWithEntity = contentState.createEntity(
-            'PLACEHOLDER',
-            'IMMUTABLE',
-            {
-                code: entity_code,
-            },
-        );
-
-        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-
-
-        let newContentState = Modifier.replaceText(
-            contentStateWithEntity,
-            editorState.getSelection(),
-            `${CONSTANTS.PLACEHOLDER_TRIGGER}${placeholder}${CONSTANTS.PLACEHOLDER_CLOSER} `,
-            null,
-            entityKey,
-        );
-
-        const newEditorState = EditorState.push(
-            editorState,
-            newContentState,
-            `insert-placeholder`,
-        );
-
-        onChange(newEditorState);
-    }
-
-    return (
-        <div className="rdw-option-wrapper" onClick={addTextFieldPlaceholder}><FormattedMessage defaultMessage="Текстовое поле"/></div>
-    );
-}
-
-function ToolbarNumberFieldButton({editorState, onChange}) {
-    const {blanksStore} = useStore();
-
-    const addTextFieldPlaceholder = () => {
-        const entity_code = v4();
-        const field_type = CONSTANTS.FIELD_TYPES.find(x => x.code === CONSTANTS.TYPE_NUMBER_FIELD)
-        const placeholder = field_type.label.toLocaleUpperCase();
-        blanksStore.addEntity(entity_code, CONSTANTS.TYPE_NUMBER_FIELD, placeholder)
-
-        const contentState = editorState.getCurrentContent();
-        const contentStateWithEntity = contentState.createEntity(
-            'PLACEHOLDER',
-            'IMMUTABLE',
-            {
-                code: entity_code,
-            },
-        );
-
-        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-
-        let newContentState = Modifier.replaceText(
-            contentStateWithEntity,
-            editorState.getSelection(),
-            `${CONSTANTS.PLACEHOLDER_TRIGGER}${placeholder}${CONSTANTS.PLACEHOLDER_CLOSER} `,
-            null,
-            entityKey,
-        );
-
-        const newEditorState = EditorState.push(
-            editorState,
-            newContentState,
-            `insert-placeholder`,
-        );
-
-        onChange(newEditorState);
-    }
-
-    return (
-        <div className="rdw-option-wrapper" onClick={addTextFieldPlaceholder}><FormattedMessage defaultMessage="Числовое поле"/></div>
-    );
-}
-
-
-function ToolbarSelectButton({editorState, onChange}) {
-    const {blanksStore} = useStore();
-
-    const addSelectFieldPlaceholder = () => {
-        const contentState = editorState.getCurrentContent();
-
-        const entity_code = v4();
-        const field_type = CONSTANTS.FIELD_TYPES.find(x => x.code === CONSTANTS.TYPE_SELECT_FIELD)
-        const placeholder = field_type.label.toLocaleUpperCase();
-        blanksStore.addEntity(entity_code, CONSTANTS.TYPE_SELECT_FIELD, placeholder);
-
-        const contentStateWithEntity = contentState.createEntity(
-            'PLACEHOLDER',
-            'IMMUTABLE',
-            {
-                code: entity_code,
-            },
-        );
-
-        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-
-        let newContentState = Modifier.replaceText(
-            contentStateWithEntity,
-            editorState.getSelection(),
-            `${CONSTANTS.PLACEHOLDER_TRIGGER}${placeholder}${CONSTANTS.PLACEHOLDER_CLOSER} `,
-            null,
-            entityKey,
-        );
-
-        const newEditorState = EditorState.push(
-            editorState,
-            newContentState,
-            `insert-placeholder`,
-        );
-
-        onChange(newEditorState);
-    }
-
-    return (
-        <div className="rdw-option-wrapper" onClick={addSelectFieldPlaceholder}><FormattedMessage defaultMessage="Выпадающий список"/></div>
-    );
-}
+// const decorators = dynamic(() => import('./decorators/editor_decorators').then(mod => mod.decorators),{ ssr: false });
 
 const useStyles = makeStyles((theme) => ({
     toolbarIcon: {
@@ -248,9 +119,10 @@ const BlankEditor = observer(function BlankEditor({value, onChange, style = {}})
                     },
                 }}
                 toolbarCustomButtons={[
-                    <ToolbarTextFieldButton/>,
-                    <ToolbarNumberFieldButton/>,
-                    <ToolbarSelectButton/>
+                    <ToolbarButtonInsertPlaceholder field_type_code={CONSTANTS.TYPE_TEXT_FIELD} label={'Текстовое поле'}/>,
+                    <ToolbarButtonInsertPlaceholder field_type_code={CONSTANTS.TYPE_NUMBER_FIELD} label={'Числовое поле'}/>,
+                    <ToolbarButtonInsertPlaceholder field_type_code={CONSTANTS.TYPE_SELECT_FIELD} label={'Выпадающий список'}/>,
+                    <ToolbarButtonInsertPlaceholder field_type_code={CONSTANTS.TYPE_TABLE_FIELD} label={'Таблица'}/>,
                 ]}
             />
 

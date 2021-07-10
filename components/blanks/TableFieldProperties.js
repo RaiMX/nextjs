@@ -13,7 +13,7 @@ import {FormattedMessage} from 'react-intl';
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import {Grid, MenuItem, FormControl, FormControlLabel, InputLabel, Select, TextField, Checkbox} from "@material-ui/core";
+import {Grid, MenuItem, FormControl, FormControlLabel, InputLabel, Select, TextField, Checkbox, Tooltip} from "@material-ui/core";
 
 /** LOADING WITHOUT SSR because Component does not support SSR */
 const TableColumnsEditor = dynamic(() => import('./helpers/TableColumnsEditor'), {ssr: false});
@@ -21,7 +21,9 @@ const TableColumnsEditor = dynamic(() => import('./helpers/TableColumnsEditor'),
 const useStyles = makeStyles((theme) => ({
 	root: {},
 	formControl: {
-		margin: theme.spacing(1),
+		marginTop: theme.spacing(1),
+		marginBottom: theme.spacing(1),
+		marginLeft: theme.spacing(3),
 		minWidth: 120,
 		width: '95%'
 	},
@@ -75,6 +77,13 @@ const TableFieldProperties = observer(function TableFieldProperties({entity_code
 				</FormControl>
 			</Grid>
 			<Grid item xs={12} md={12}>
+				<Tooltip title="Кликните ячейку чтобы редактировать" placement="right">
+					<Typography style={{marginLeft: 20, width: 'fit-content'}}><FormattedMessage defaultMessage="Шапка таблицы"/></Typography>
+				</Tooltip>
+
+				<TableColumnsEditor entity_code={entity_code} entity_properties={entity_properties}/>
+			</Grid>
+			<Grid item xs={12} md={12}>
 				<FormControl className={classes.formControl}>
 					<FormControlLabel
 						control={<Checkbox
@@ -89,8 +98,20 @@ const TableFieldProperties = observer(function TableFieldProperties({entity_code
 				</FormControl>
 			</Grid>
 			<Grid item xs={12} md={12}>
-				<TableColumnsEditor entity_code={entity_code} entity_properties={entity_properties}/>
+				<FormControl className={classes.formControl}>
+					<FormControlLabel
+						control={<Checkbox
+							checked={entity_properties.table_show_cols_number || false}
+							onChange={(e) => {
+								blanksStore.setEntityProperty(entity_code, 'table_show_cols_number', e.target.checked);
+							}}
+							color="primary"
+						/>}
+						label="Автоматическая нумерация колонок"
+					/>
+				</FormControl>
 			</Grid>
+
 		</Grid>
 	);
 })

@@ -17,7 +17,9 @@ import {Grid, MenuItem, FormControl, FormControlLabel, InputLabel, Select, TextF
 const useStyles = makeStyles((theme) => ({
 	root: {},
 	formControl: {
-		margin: theme.spacing(1),
+		marginTop: theme.spacing(1),
+		marginBottom: theme.spacing(1),
+		marginLeft: theme.spacing(3),
 		minWidth: 120,
 		width: '95%'
 	},

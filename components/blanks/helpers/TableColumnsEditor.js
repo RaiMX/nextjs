@@ -19,6 +19,10 @@ registerLanguageDictionary(ruRU);
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
+	handsontable: {
+		marginLeft: 20,
+		marginRight: 20,
+	}
 }))
 
 const TableColumnsEditor = observer(function TableColumnsEditor({entity_code, entity_properties}) {
@@ -26,11 +30,17 @@ const TableColumnsEditor = observer(function TableColumnsEditor({entity_code, en
 	const {blanksStore} = useStore();
 
 	const hotTableComponent = React.useRef(null);
-	const [data, setData] = React.useState([['']])
 
-	const getMergeCells = (table_col_headers) => {
+	const [col_headers, setColHeaders] = React.useState([]);
+	const [data, setData] = React.useState([['']]);
+	const [settings, setSettings] = React.useState({
+		licenseKey: "non-commercial-and-evaluation"
+	});
+
+
+	const getMergeCells = () => {
 		const merge_cells = [];
-		table_col_headers && table_col_headers.map(header => {
+		col_headers && col_headers.map(header => {
 			if (header.spanned) {
 				merge_cells.push({
 					row: header.row,
@@ -54,9 +64,8 @@ const TableColumnsEditor = observer(function TableColumnsEditor({entity_code, en
 		console.log('source', source);
 
 		if (hotTableComponent.current !== null && hotTableComponent.current.hotInstance) {
-			const hot = hotTableComponent.current.hotInstance;
-			const hot_data = hot.getData();
-			const cells_meta = hot.getCellsMeta();
+			const hot_data = hotTableComponent.current.hotInstance.getData();
+			const cells_meta = hotTableComponent.current.hotInstance.getCellsMeta();
 
 			console.log('hot_data', hot_data)
 			console.log('hot_meta', cells_meta)
@@ -69,47 +78,89 @@ const TableColumnsEditor = observer(function TableColumnsEditor({entity_code, en
 		}
 	}
 
+	const handleRemoveRow = (index, amount, physicalRows, source) => {
+		console.log(index, amount, physicalRows, source)
+
+		const hot_data = hotTableComponent.current.hotInstance.getData();
+		const cells_meta = hotTableComponent.current.hotInstance.getCellsMeta().filter(c => {
+			return physicalRows.indexOf(c.row) <= -1;
+		})
+
+		console.log('hot_data', hot_data)
+		console.log('hot_meta', cells_meta)
+
+		const _col_headers = extractColsMeta(cells_meta, hot_data);
+		console.log('_col_headers', _col_headers)
+
+		blanksStore.setEntityProperty(entity_code, 'table_col_headers', _col_headers);
+		blanksStore.setEntityProperty(entity_code, 'table_col_headers_data', hot_data);
+	}
+
+	const handleRemoveCol = (index, amount, physicalCols, source) => {
+		console.log(index, amount, physicalCols, source)
+
+		const hot_data = hotTableComponent.current.hotInstance.getData();
+		const cells_meta = hotTableComponent.current.hotInstance.getCellsMeta().filter(c => {
+			return physicalCols.indexOf(c.col) <= -1;
+		})
+
+		console.log('hot_data', hot_data)
+		console.log('hot_meta', cells_meta)
+
+		const _col_headers = extractColsMeta(cells_meta, hot_data);
+		console.log('_col_headers', _col_headers)
+
+		blanksStore.setEntityProperty(entity_code, 'table_col_headers', _col_headers);
+		blanksStore.setEntityProperty(entity_code, 'table_col_headers_data', hot_data);
+	}
+
+	// React.useEffect(() => {
+	// 	setData(blanksStore.entities_props[entity_code]['table_col_headers_data'])
+	// }, [blanksStore.entities_props[entity_code]['table_col_headers_data']])
+
 	React.useEffect(() => {
-		setData(blanksStore.entities_props[entity_code]['table_col_headers_data'])
-	}, [blanksStore.entities_props[entity_code]['table_col_headers_data']])
+		setColHeaders(blanksStore.entities_props[entity_code]['table_col_headers']);
+		setData(blanksStore.entities_props[entity_code]['table_col_headers_data']);
+	}, [])
 
 	return (
 		<HotTable
 			ref={hotTableComponent}
 			id={'hot-columns'}
 			className={classes.handsontable}
-			style={{overflow: 'visible'}}
 
-			settings={{
-				licenseKey: "non-commercial-and-evaluation",
-				data: data,
-				colHeaders: (index) => (index + 1),
-				rowHeaders: false,
-				// width: '50%',
-				height: "auto",
-				contextMenu: true,
-				language: ruRU.languageCode,
-				manualColumnResize: true,
-				manualRowResize: true,
-				stretchH: 'last',
-				mergeCells: getMergeCells(blanksStore.entities_props[entity_code]['table_col_headers']),
-				afterChange: function (change, source) {
-					handleChange(change, source)
-				},
-				afterRemoveRow: function (index, amount, physicalRows, source) {
-					handleChange(index, source)
-				},
-				afterContextMenuShow: function (context) {
-					// document.querySelector(".htContextMenu").style.zIndex = 9999;
+			licenseKey={"non-commercial-and-evaluation"}
+			data={data}
+			// colHeaders={(index) => (index + 1)}
+			colHeaders={false}
+			rowHeaders={false}
+			// width={'50%'}
+			height={"auto"}
+			contextMenu={true}
+			language={ruRU.languageCode}
+			manualColumnResize={true}
+			manualRowResize={true}
+			// stretchH={'last'}
+			mergeCells={getMergeCells()}
+			afterChange={function (change, source) {
+				handleChange(change, source)
+			}}
+			afterRemoveRow={function (index, amount, physicalRows, source) {
+				handleRemoveRow(index, amount, physicalRows, source)
+			}}
+			afterRemoveCol={function (index, amount, physicalCols, source) {
+				handleRemoveCol(index, source)
+			}}
+			afterContextMenuShow={function (context) {
+				// document.querySelector(".htContextMenu").style.zIndex = 9999;
 
-					let style = document.createElement('style');
-					style.innerHTML = `
+				let style = document.createElement('style');
+				style.innerHTML = `
 						  .htContextMenu {
 								z-index: 9999 !important;
 							}
 						  `;
-					document.head.appendChild(style);
-				}
+				document.head.appendChild(style);
 			}}
 		/>
 	);

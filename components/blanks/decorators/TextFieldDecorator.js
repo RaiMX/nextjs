@@ -35,7 +35,7 @@ const TextFieldDecorator = observer(function TextFieldDecorator({entity_props}) 
 			// label={entity_props?.allow_null === false && (value === undefined || value === '') ? 'Обязательно' : ''}
 			multiline
 			size="small"
-			style={{width: value?.length * 9 || 200, maxWidth: 1000, marginTop: -5, marginLeft: 5, marginRight: 5}}
+			style={{width: value?.length * 9 + 20 || 200, maxWidth: 1000, marginTop: -5, marginLeft: 5, marginRight: 5}}
 			value={value || ''}
 			onChange={(e) => {
 				blanksStore.setEntityValue(entity_props.code, {

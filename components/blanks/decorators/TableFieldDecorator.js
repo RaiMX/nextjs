@@ -29,28 +29,6 @@ const useStyles = makeStyles((theme) => ({
 	}
 }))
 
-const headers = [
-	{
-		id: 1,
-		pid: null,
-		label: 'Порядок убеждения в свободности стрелки от подвижного состава',
-	},
-	{
-		id: 2,
-		pid: null,
-		label: 'Порядок убеждения в свободности стрелки от подвижного состава',
-	},
-	{
-		id: 3,
-		pid: 1,
-		label: 'при нормальном действии устройств СЦБ',
-	},
-	{
-		id: 4,
-		pid: 1,
-		label: 'при неисправности устройств СЦБ',
-	},
-]
 
 const TableFieldDecorator = observer(function TableFieldDecorator({entity_props}) {
 	const classes = useStyles();
@@ -58,22 +36,39 @@ const TableFieldDecorator = observer(function TableFieldDecorator({entity_props}
 
 	const hotTableComponent = React.useRef(null);
 
-	const [value, setValue] = React.useState(entity_props?.value?.value ? entity_props.value.value : undefined)
+	const [nested_headers, setNestedHeaders] = React.useState([]);
+	const [settings, setSettings] = React.useState({
+		licenseKey: "non-commercial-and-evaluation"
+	});
 
-	React.useEffect(() => {
-		if (blanksStore.entities_props[entity_props.code]['value']) {
-			setValue(blanksStore.entities_props[entity_props.code]['value']['value']);
+	const [max_cols, setMaxCols] = React.useState(1);
+
+	const [value, setValue] = React.useState(entity_props?.value?.value ? entity_props.value.value : []);
+
+	/** Unconfigured table */
+	if (!blanksStore.entities_props[entity_props.code]['table_col_headers']) {
+		return <Typography><FormattedMessage defaultMessage="Необходимо настроить таблицу"/></Typography>
+	}
+
+	const buildTableColHeaders = (table_col_headers) => {
+		console.log('input col headers', table_col_headers.length)
+		const {tree, flat, num_levels} = makeTree(table_col_headers, 'id', 'pid');
+		const _nested_headers = buildNestedHeaders(flat, num_levels);
+
+		let _max_cols = 1
+		_nested_headers.map(header => {
+			if (header.length > _max_cols) _max_cols = header.length
+		})
+
+		if (blanksStore.entities_props[entity_props.code]['table_show_cols_number']) {
+			_nested_headers.push((new Array(_max_cols).fill(0)).map((x, index) => (index + 1)));
 		}
-	}, [blanksStore.entities_props[entity_props.code]['value']])
 
+		console.log('buildTableColHeaders', _max_cols);
 
-	const {tree, flat, num_levels, max_cols} = makeTree(blanksStore.entities_props[entity_props.code]['table_col_headers'], 'id', 'pid');
-	const nested_headers = buildNestedHeaders(flat, num_levels);
-
-	nested_headers.push((new Array(max_cols).fill(0)).map((x, index) => (index + 1)))
-
-	const empty_row_data = new Array(max_cols - 1)
-	const data = [empty_row_data];
+		setNestedHeaders(_nested_headers);
+		setMaxCols(_max_cols);
+	}
 
 	const handleChange = (change, source) => {
 		if (source === 'loadData') {
@@ -88,7 +83,37 @@ const TableFieldDecorator = observer(function TableFieldDecorator({entity_props}
 			console.log('change', change)
 			console.log('hot_data', hot_data)
 			console.log('hot_meta', hot_meta)
+
+			blanksStore.setEntityValue(entity_props.code, hot_data);
 		}
+	}
+
+	React.useEffect(() => {
+		if (blanksStore.entities_props[entity_props.code]['value']) {
+			setValue(blanksStore.entities_props[entity_props.code]['value']);
+		}
+	}, [blanksStore.entities_props[entity_props.code]['value']])
+
+	React.useEffect(() => {
+		buildTableColHeaders(blanksStore.entities_props[entity_props.code]['table_col_headers']);
+		console.log('headers or data changed')
+	}, [
+		blanksStore.entities_props[entity_props.code]['table_col_headers'],
+		blanksStore.entities_props[entity_props.code]['table_col_headers_data'],
+	])
+
+	React.useEffect(() => {
+		console.log('initial render')
+		buildTableColHeaders(blanksStore.entities_props[entity_props.code]['table_col_headers']);
+	}, [])
+
+	console.log('table data', value);
+	console.log('table cols', nested_headers);
+	console.log('table settings', settings);
+
+	if (!value || value.length === 0 || max_cols !== value[0].length) {
+		const empty_row_data = new Array(max_cols);
+		setValue([empty_row_data])
 	}
 
 	return (
@@ -97,27 +122,22 @@ const TableFieldDecorator = observer(function TableFieldDecorator({entity_props}
 			id={'hot'}
 			className={classes.handsontable}
 
-			settings={{
-				licenseKey: "non-commercial-and-evaluation",
-				data: data,
-				colHeaders: true,
-				rowHeaders: false,
-				// width:'100%',
-				height: "auto",
-				contextMenu: true,
-				language: ruRU.languageCode,
-				manualColumnResize: true,
-				manualRowResize: true,
-				stretchH: 'last',
-				nestedHeaders: nested_headers,
-				mergeCells: true,
-				afterChange: function (change, source) {
-					handleChange(change, source)
-				}
+			licenseKey={"non-commercial-and-evaluation"}
+			data={value}
+			colHeaders={true}
+			rowHeaders={false}
+			// width:'100%'}
+			height={"auto"}
+			contextMenu={true}
+			language={ruRU.languageCode}
+			manualColumnResize={true}
+			manualRowResize={true}
+			// stretchH={'last'}
+			nestedHeaders={nested_headers}
+			mergeCells={true}
+			afterChange={function (change, source) {
+				handleChange(change, source)
 			}}
-
-
-			// afterChange={(change, source) => handleChange(change, source)}
 		/>
 	);
 })

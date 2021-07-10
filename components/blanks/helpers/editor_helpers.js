@@ -85,7 +85,6 @@ export const renderPlaceholderText = (editorState, autocompleteState, placeholde
 export const makeTree = (array, code_prop = 'code', parent_prop = 'parent_code', children_prop = 'children') => {
 	const hashTable = Object.create(null);
 	let num_levels = 0;
-	let max_cols = 1;
 
 	array.forEach(aData => hashTable[aData[code_prop]] = {
 		...aData,
@@ -117,17 +116,12 @@ export const makeTree = (array, code_prop = 'code', parent_prop = 'parent_code',
 	});
 
 	const ids = Object.keys(hashTable);
-	const flat = ids.map(id => {
-		max_cols += hashTable[id]['num_desc']
-
-		return hashTable[id];
-	})
+	const flat = ids.map(id => hashTable[id])
 
 	return {
 		tree: dataTree,
 		flat: flat,
 		num_levels,
-		max_cols
 	};
 };
 

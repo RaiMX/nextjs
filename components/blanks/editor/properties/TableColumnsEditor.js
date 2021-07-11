@@ -30,7 +30,7 @@ const TableColumnsEditor = observer(function TableColumnsEditor({entity_code, en
 	const hotTableComponent = React.useRef(null);
 
 	const [col_headers, setColHeaders] = React.useState([]);
-	const [data, setData] = React.useState([['']]);
+	const [data, setData] = React.useState([['Столбец 1']]);
 	const [settings, setSettings] = React.useState({
 		licenseKey: "non-commercial-and-evaluation"
 	});
@@ -111,10 +111,6 @@ const TableColumnsEditor = observer(function TableColumnsEditor({entity_code, en
 		blanksStore.setEntityProperty(entity_code, 'table_col_headers', _col_headers);
 		blanksStore.setEntityProperty(entity_code, 'table_col_headers_data', hot_data);
 	}
-
-	// React.useEffect(() => {
-	// 	setData(blanksStore.entities_props[entity_code]['table_col_headers_data'])
-	// }, [blanksStore.entities_props[entity_code]['table_col_headers_data']])
 
 	React.useEffect(() => {
 		setColHeaders(blanksStore.entities_props[entity_code]['table_col_headers']);

@@ -10,11 +10,11 @@ export default function About() {
       <Container maxWidth="sm">
         <Box my={4}>
           <Typography variant="h4" component="h1" gutterBottom>
-            Next.js example
+              О Нас
           </Typography>
-          <Button variant="contained" color="primary" component={Link} naked href="/">
-            Go to the main page
-          </Button>
+            <Button variant="contained" color="primary" component={Link} naked href="/">
+                Перейти на главную
+            </Button>
         </Box>
       </Container>
   );

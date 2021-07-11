@@ -2,7 +2,7 @@ import React from 'react';
 
 /** COMPONENTS */
 import {useStore} from 'store/store_provider'
-import * as CONSTANTS from "./CONSTANTS";
+import * as CONSTANTS from "../../CONSTANTS";
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
@@ -10,8 +10,7 @@ import {FormattedMessage} from 'react-intl';
 
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import {Grid, MenuItem, FormControl, FormControlLabel, InputLabel, Select, TextField, Checkbox} from "@material-ui/core";
+import {Checkbox, FormControl, FormControlLabel, Grid, TextField} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 
-const SelectFieldProperties = observer(function SelectFieldProperties({entity_code, entity_properties}) {
+const NumberFieldProperties = observer(function NumberFieldProperties({entity_code, entity_properties}) {
 	const classes = useStyles();
 	const {blanksStore} = useStore();
 
@@ -51,19 +50,14 @@ const SelectFieldProperties = observer(function SelectFieldProperties({entity_co
 			</Grid>
 			<Grid item xs={12} md={12}>
 				<FormControl className={classes.formControl}>
-					<InputLabel id="list-name-label"><FormattedMessage defaultMessage={'Название списка'}/></InputLabel>
-					<Select
-						labelId="list-name-label"
-						value={entity_properties.list_code || ''}
-						fullWidth
+					<TextField
+						label={<FormattedMessage defaultMessage={'Ширина отображаемого поля ввода'}/>}
+						value={entity_properties.field_width || 1000}
+						type={'number'}
 						onChange={(e) => {
-							blanksStore.setEntityProperty(entity_code, 'list_code', e.target.value);
+							blanksStore.setEntityProperty(entity_code, 'field_width', Number(e.target.value));
 						}}
-					>
-						{blanksStore.select_lists_names.map((list, index) => (
-							<MenuItem key={index} value={list.code}>{list.label}</MenuItem>
-						))}
-					</Select>
+					/>
 				</FormControl>
 			</Grid>
 			<Grid item xs={12} md={12}>
@@ -81,8 +75,19 @@ const SelectFieldProperties = observer(function SelectFieldProperties({entity_co
 
 				</FormControl>
 			</Grid>
+			<Grid item xs={12} md={12}>
+				<FormControl className={classes.formControl}>
+					<TextField
+						label={<FormattedMessage defaultMessage={'Описание поля'}/>}
+						value={entity_properties.description || ''}
+						onChange={(e) => {
+							blanksStore.setEntityProperty(entity_code, 'description', e.target.value);
+						}}
+					/>
+				</FormControl>
+			</Grid>
 		</Grid>
 	);
 })
 
-export default SelectFieldProperties
+export default NumberFieldProperties

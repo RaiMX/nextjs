@@ -1,7 +1,7 @@
 import React from "react";
 
 /** COMPONENTS */
-import PlaceholderFormComponent from './PlaceholderFormComponent'
+import PlaceholderBlankComponent from './PlaceholderBlankComponent'
 
 /** THIRD PARTY */
 
@@ -22,6 +22,6 @@ const findPlaceholderEntities = (contentBlock, callback, contentState) => {
 export const decorators = [
 	{
 		strategy: findPlaceholderEntities,
-		component: PlaceholderFormComponent,
+		component: PlaceholderBlankComponent,
 	}
 ]

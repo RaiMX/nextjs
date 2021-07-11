@@ -3,8 +3,7 @@ import dynamic from "next/dynamic";
 
 /** COMPONENTS */
 import {useStore} from 'store/store_provider'
-import * as CONSTANTS from "./CONSTANTS";
-import {makeTree} from './helpers/editor_helpers';
+import * as CONSTANTS from "../../CONSTANTS";
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
@@ -13,10 +12,10 @@ import {FormattedMessage} from 'react-intl';
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import {Grid, MenuItem, FormControl, FormControlLabel, InputLabel, Select, TextField, Checkbox, Tooltip} from "@material-ui/core";
+import {Checkbox, FormControl, FormControlLabel, Grid, TextField, Tooltip} from "@material-ui/core";
 
 /** LOADING WITHOUT SSR because Component does not support SSR */
-const TableColumnsEditor = dynamic(() => import('./helpers/TableColumnsEditor'), {ssr: false});
+const TableColumnsEditor = dynamic(() => import('./TableColumnsEditor'), {ssr: false});
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
@@ -108,6 +107,17 @@ const TableFieldProperties = observer(function TableFieldProperties({entity_code
 							color="primary"
 						/>}
 						label="Автоматическая нумерация колонок"
+					/>
+				</FormControl>
+			</Grid>
+			<Grid item xs={12} md={12}>
+				<FormControl className={classes.formControl}>
+					<TextField
+						label={<FormattedMessage defaultMessage={'Описание поля'}/>}
+						value={entity_properties.description || ''}
+						onChange={(e) => {
+							blanksStore.setEntityProperty(entity_code, 'description', e.target.value);
+						}}
 					/>
 				</FormControl>
 			</Grid>

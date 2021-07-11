@@ -1,9 +1,8 @@
 import React from 'react';
-import dynamic from "next/dynamic";
 
 /** COMPONENTS */
 import {useStore} from 'store/store_provider'
-import {makeTree, buildNestedHeaders} from "../helpers/editor_helpers";
+import {buildNestedHeaders, makeTree} from "../../blanks_utils";
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
@@ -15,7 +14,6 @@ import {registerLanguageDictionary, ruRU} from 'handsontable/i18n';
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import {MenuItem, Select, TextField} from "@material-ui/core";
 
 
 registerLanguageDictionary(ruRU);

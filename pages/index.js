@@ -1,15 +1,7 @@
 import React from 'react';
 
-import EditorDraft from '../components/test/editor_draft';
-import Editor from '../components/test/editor';
-import MyForm from "../components/test/form";
-import {convertToRaw} from "draft-js";
-
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -26,7 +18,7 @@ export default function Index() {
 
     return (
         <>
-            <div>This is a test</div>
+            <div>Главная страница</div>
         </>
     );
 }

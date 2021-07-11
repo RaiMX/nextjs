@@ -11,7 +11,7 @@ import {FormattedMessage} from 'react-intl';
 
 /** MATERIAL */
 import clsx from 'clsx';
-import {makeStyles, Drawer, IconButton, Divider, Typography} from "@material-ui/core";
+import {Divider, Drawer, IconButton, makeStyles, Typography} from "@material-ui/core";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 const useStyles = makeStyles((theme) => ({
@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const menu = [
+export const menu = [
     {
         id: 1,
         parent: null,

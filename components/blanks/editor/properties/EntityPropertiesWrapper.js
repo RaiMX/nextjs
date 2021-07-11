@@ -2,7 +2,7 @@ import React from 'react';
 
 /** COMPONENTS */
 import {useStore} from 'store/store_provider'
-import * as CONSTANTS from "./CONSTANTS"
+import * as CONSTANTS from "../../CONSTANTS"
 import SelectFieldProperties from "./SelectFieldProperties";
 import TextFieldProperties from "./TextFieldProperties";
 import NumberFieldProperties from "./NumberFieldProperties";
@@ -10,21 +10,16 @@ import TableFieldProperties from "./TableFieldProperties";
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
-import {FormattedMessage} from 'react-intl';
 
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import {Grid, MenuItem, Select, TextField} from "@material-ui/core";
-
-
 
 
 const useStyles = makeStyles((theme) => ({
 	root: {}
 }))
 
-const EntityProperties = observer(function EntityProperties() {
+const EntityPropertiesWrapper = observer(function EntityProperties() {
 	const classes = useStyles();
 	const {blanksStore} = useStore();
 
@@ -58,4 +53,4 @@ const EntityProperties = observer(function EntityProperties() {
 	return null;
 })
 
-export default EntityProperties
+export default EntityPropertiesWrapper

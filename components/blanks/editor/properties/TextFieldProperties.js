@@ -2,7 +2,7 @@ import React from 'react';
 
 /** COMPONENTS */
 import {useStore} from 'store/store_provider'
-import * as CONSTANTS from "./CONSTANTS";
+import * as CONSTANTS from "../../CONSTANTS";
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
@@ -11,7 +11,7 @@ import {FormattedMessage} from 'react-intl';
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import {Grid, MenuItem, FormControl, FormControlLabel, InputLabel, Select, TextField, Checkbox} from "@material-ui/core";
+import {Checkbox, Divider, FormControl, FormControlLabel, Grid, TextField} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -23,13 +23,18 @@ const useStyles = makeStyles((theme) => ({
 		minWidth: 120,
 		width: '95%'
 	},
+	section: {
+		marginTop: theme.spacing(1),
+		marginBottom: theme.spacing(1),
+		marginLeft: theme.spacing(3),
+	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
 	},
 }))
 
 
-const NumberFieldProperties = observer(function NumberFieldProperties({entity_code, entity_properties}) {
+const TextFieldProperties = observer(function TextFieldProperties({entity_code, entity_properties}) {
 	const classes = useStyles();
 	const {blanksStore} = useStore();
 
@@ -73,11 +78,29 @@ const NumberFieldProperties = observer(function NumberFieldProperties({entity_co
 						/>}
 						label="Разрешить пустое значение"
 					/>
-
 				</FormControl>
 			</Grid>
+			<Grid item xs={12} md={12}>
+				<Divider/>
+				<div className={classes.section}>
+					<Typography><FormattedMessage defaultMessage={'Вид Форма'}/></Typography>
+				</div>
+
+			</Grid>
+			<Grid item xs={12} md={12}>
+				<FormControl className={classes.formControl}>
+					<TextField
+						label={<FormattedMessage defaultMessage={'Описание поля'}/>}
+						value={entity_properties.description || ''}
+						onChange={(e) => {
+							blanksStore.setEntityProperty(entity_code, 'description', e.target.value);
+						}}
+					/>
+				</FormControl>
+			</Grid>
+
 		</Grid>
 	);
 })
 
-export default NumberFieldProperties
+export default TextFieldProperties

@@ -5,12 +5,10 @@ import {useStore} from 'store/store_provider'
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
-import {FormattedMessage} from 'react-intl';
 
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import {MenuItem, Select, TextField} from "@material-ui/core";
+import {TextField, Tooltip} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -30,19 +28,23 @@ const TextFieldDecorator = observer(function TextFieldDecorator({entity_props}) 
 	}, [blanksStore.entities_props[entity_props.code]['value']])
 
 	return (
-		<TextField
-			error={entity_props?.allow_null === false && (value === undefined || value === '')}
-			// label={entity_props?.allow_null === false && (value === undefined || value === '') ? 'Обязательно' : ''}
-			multiline
-			size="small"
-			style={{width: value?.length * 9 + 20 || 200, maxWidth: 1000, marginTop: -5, marginLeft: 5, marginRight: 5}}
-			value={value || ''}
-			onChange={(e) => {
-				blanksStore.setEntityValue(entity_props.code, {
-					value: e.target.value
-				})
-			}}
-		/>
+		<Tooltip title={entity_props.description || null} placement="right-end">
+			<TextField
+				error={entity_props?.allow_null === false && (value === undefined || value === '')}
+				// label={entity_props?.allow_null === false && (value === undefined || value === '') ? 'Обязательно' : ''}
+				multiline
+				size="small"
+				style={{width: value?.length * 9 + 20 || 200, maxWidth: 1000, marginTop: -5, marginLeft: 5, marginRight: 5}}
+				value={value || ''}
+				// helperText={entity_props.description || null}
+				onChange={(e) => {
+					blanksStore.setEntityValue(entity_props.code, {
+						value: e.target.value
+					})
+				}}
+			/>
+		</Tooltip>
+
 	);
 })
 

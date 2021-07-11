@@ -2,18 +2,16 @@ import React from 'react';
 
 /** COMPONENTS */
 import {useStore} from 'store/store_provider'
-import {makeTree, buildNestedHeaders, extractColsMeta} from "./editor_helpers";
+import {extractColsMeta} from "../../blanks_utils";
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
-import {FormattedMessage} from 'react-intl';
 import {HotTable} from '@handsontable/react'
 import 'handsontable/dist/handsontable.full.css';
 import {registerLanguageDictionary, ruRU} from 'handsontable/i18n';
 
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
 registerLanguageDictionary(ruRU);
 

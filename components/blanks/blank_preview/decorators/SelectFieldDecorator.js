@@ -5,12 +5,10 @@ import {useStore} from 'store/store_provider'
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
-import {FormattedMessage} from 'react-intl';
 
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import {MenuItem, Select} from "@material-ui/core";
+import {MenuItem, Select, Tooltip} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -30,21 +28,23 @@ const SelectFieldDecorator = observer(function SelectFieldDecorator({entity_prop
 	}, [blanksStore.entities_props[entity_props.code]['value']])
 
 	return (
-		<Select
-			value={value || ''}
-			autoWidth
-			size="small"
-			style={{marginTop: -10, marginLeft: 5, marginRight: 5}}
-			onChange={(e) => {
-				blanksStore.setEntityValue(entity_props.code, {
-					value: e.target.value
-				})
-			}}
-		>
-			{blanksStore.select_lists[entity_props.list_code] && blanksStore.select_lists[entity_props.list_code]['values'].map((list, index) => (
-				<MenuItem key={index} value={list.value}>{list.label}</MenuItem>
-			))}
-		</Select>
+		<Tooltip title={entity_props.description || null} placement="right-end">
+			<Select
+				value={value || ''}
+				autoWidth
+				size="small"
+				style={{marginTop: -10, marginLeft: 5, marginRight: 5}}
+				onChange={(e) => {
+					blanksStore.setEntityValue(entity_props.code, {
+						value: e.target.value
+					})
+				}}
+			>
+				{blanksStore.select_lists[entity_props.list_code] && blanksStore.select_lists[entity_props.list_code]['values'].map((list, index) => (
+					<MenuItem key={index} value={list.value}>{list.label}</MenuItem>
+				))}
+			</Select>
+		</Tooltip>
 	);
 })
 

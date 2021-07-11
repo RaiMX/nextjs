@@ -7,12 +7,10 @@ import {EditorState, Modifier} from "draft-js";
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
-import {FormattedMessage} from 'react-intl';
 import {v4} from "uuid";
 
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
 
 const useStyles = makeStyles((theme) => ({

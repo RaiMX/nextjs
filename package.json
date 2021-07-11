@@ -20,6 +20,7 @@
 		"mobx-react": "^7.2.0",
 		"mobx-react-lite": "^3.2.0",
 		"next": "latest",
+		"nextjs-breadcrumbs": "^1.1.4",
 		"nprogress": "^0.2.0",
 		"prop-types": "latest",
 		"react": "latest",

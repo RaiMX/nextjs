@@ -1,5 +1,5 @@
 import {EditorState, Modifier} from "draft-js";
-import {PLACEHOLDER_TRIGGER, PLACEHOLDER_CLOSER} from "../CONSTANTS";
+import {PLACEHOLDER_CLOSER, PLACEHOLDER_TRIGGER} from "./CONSTANTS";
 import {toast} from "react-toastify";
 
 

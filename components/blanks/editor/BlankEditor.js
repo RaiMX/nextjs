@@ -3,20 +3,19 @@ import dynamic from "next/dynamic";
 
 /** COMPONENTS */
 import {useStore} from 'store/store_provider'
-import * as CONSTANTS from "./CONSTANTS";
+import * as CONSTANTS from "../CONSTANTS";
 import {decorators} from './decorators/editor_decorators'
-import {getTriggerRange, renderPlaceholderText} from "./helpers/editor_helpers";
-import EntityProperties from "./EntityProperties";
-import ToolbarButtonInsertPlaceholder from "./helpers/ToolbarButtonInsertPlaceholder";
+import {getTriggerRange, renderPlaceholderText} from "../blanks_utils";
+import EntityPropertiesWrapper from "./properties/EntityPropertiesWrapper";
+import ToolbarButtonInsertPlaceholder from "./ToolbarButtonInsertPlaceholder";
 
 /** THIRD PARTY */
-import {convertFromRaw, convertToRaw, EditorState, Modifier} from 'draft-js';
+import {convertFromRaw, convertToRaw, EditorState} from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import {v4} from 'uuid';
 import {FormattedMessage} from 'react-intl';
 
 /** MATERIAL */
-import {Divider, Drawer, Grid, IconButton, makeStyles, Typography} from "@material-ui/core";
+import {Divider, Drawer, IconButton, makeStyles, Typography} from "@material-ui/core";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import {observer} from "mobx-react-lite";
 
@@ -143,7 +142,7 @@ const BlankEditor = observer(function BlankEditor({value, onChange, style = {}})
                             <Typography><FormattedMessage defaultMessage="Свойства" id="properties"/></Typography>
                         </div>
                         <Divider/>
-                        <EntityProperties/>
+                        <EntityPropertiesWrapper/>
                     </>
                 ) : null}
 

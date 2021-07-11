@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import dynamic from "next/dynamic";
 import './create.module.css'
 
 /** COMPONENTS */
 import {AppContext, AppDispatchContext} from "providers/app_provider";
-import BlankEditor from 'components/blanks/BlankEditor';
-import BlankPreview from 'components/blanks/BlankPreview'
+import BlankEditor from 'components/blanks/editor/BlankEditor';
+import BlankPreview from 'components/blanks/blank_preview/BlankPreview'
+import FormPreview from "../../components/blanks/form_preview/FormPreview";
 
 /** THIRD PARTY */
 import {FormattedMessage} from 'react-intl';
@@ -15,8 +15,7 @@ import {useStore} from "store/store_provider";
 
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import {AppBar, Button, Grid, Paper} from "@material-ui/core";
+import {Button, Grid, Paper} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -27,6 +26,10 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: theme.spacing(4),
         overflow: 'auto',
     },
+    tabButton: {
+        marginLeft: 5,
+        marginRight: 5,
+    }
 }))
 
 function TabPanel(props) {
@@ -90,8 +93,9 @@ const BlankCreate = observer(function BlankCreate() {
             spacing={2}
         >
             <Grid item xs={12} md={12}>
-                <Button style={{marginRight: 10}} variant={'contained'} color={tab_index === 0 ? 'primary' : 'default'} onClick={() => setTabIndex(0)}><FormattedMessage defaultMessage={'Конструктор'}/></Button>
-                <Button variant={'contained'} color={tab_index === 1 ? 'primary' : 'default'} onClick={() => setTabIndex(1)}><FormattedMessage defaultMessage={'Просмотр'}/></Button>
+                <Button className={classes.tabButton} variant={'contained'} color={tab_index === 0 ? 'primary' : 'default'} onClick={() => setTabIndex(0)}><FormattedMessage defaultMessage={'Конструктор'}/></Button>
+                <Button className={classes.tabButton} variant={'contained'} color={tab_index === 1 ? 'primary' : 'default'} onClick={() => setTabIndex(1)}><FormattedMessage defaultMessage={'Вид Бланк'}/></Button>
+                <Button className={classes.tabButton} variant={'contained'} color={tab_index === 2 ? 'primary' : 'default'} onClick={() => setTabIndex(2)}><FormattedMessage defaultMessage={'Вид Форма'}/></Button>
             </Grid>
 
             <Grid item xs={12} md={8}>
@@ -128,6 +132,18 @@ const BlankCreate = observer(function BlankCreate() {
                     </Paper>
                 </TabPanel>
             </Grid>
+
+            <Grid item xs={12} md={8}>
+                <TabPanel value={tab_index} index={2}>
+                    <Paper
+                        elevation={3}
+                        className={classes.paper}
+                    >
+                        <FormPreview/>
+                    </Paper>
+                </TabPanel>
+            </Grid>
+
         </Grid>
     );
 })

@@ -3,18 +3,16 @@ import dynamic from "next/dynamic";
 
 /** COMPONENTS */
 import {useStore} from 'store/store_provider'
-import * as CONSTANTS from "../CONSTANTS";
+import * as CONSTANTS from "components/blanks/CONSTANTS";
 import SelectFieldDecorator from "./SelectFieldDecorator";
 import TextFieldDecorator from "./TextFieldDecorator";
 import NumberFieldDecorator from "./NumberFieldDecorator";
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
-import {FormattedMessage} from 'react-intl';
 
 /** MATERIAL */
 import {makeStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 const TableFieldDecorator = dynamic(() => import('./TableFieldDecorator'), {ssr: false});
 
 
-const PlaceholderFormComponent = observer(function PlaceholderFormComponent({children, entityKey, contentState}) {
+const PlaceholderBlankComponent = observer(function PlaceholderFormComponent({children, entityKey, contentState}) {
 	const {blanksStore} = useStore()
 
 	const entity = contentState.getEntity(entityKey);
@@ -55,4 +53,4 @@ const PlaceholderFormComponent = observer(function PlaceholderFormComponent({chi
 	}
 })
 
-export default PlaceholderFormComponent
+export default PlaceholderBlankComponent

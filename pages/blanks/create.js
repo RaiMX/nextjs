@@ -105,12 +105,12 @@ const BlankCreate = observer(function BlankCreate() {
                     >
                         <BlankEditor
                             value={content_obj}
-                            onChange={(content_obj) => {
+                            onChange={(_content_obj) => {
 
-                                // console.log('content_obj', content_obj);
+                                console.log('content_obj', _content_obj);
 
-                                blanksStore.setEditorStateObj(content_obj)
-                                setContentObj(content_obj)
+                                blanksStore.setEditorStateObj(_content_obj)
+                                setContentObj(_content_obj)
                             }}
                         />
                     </Paper>

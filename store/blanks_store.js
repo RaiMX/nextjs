@@ -1,9 +1,10 @@
-import {action, observable, computed, runInAction, makeObservable} from 'mobx'
+import {action, computed, makeObservable, observable} from 'mobx'
 import {enableStaticRendering} from 'mobx-react-lite'
 
 enableStaticRendering(typeof window === 'undefined')
 
 export class BlanksStore {
+	id = null;
 	editor_state_obj = null
 	entities_props = {}
 	selected_entity_code = null

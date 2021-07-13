@@ -1,17 +1,17 @@
 import React from 'react';
 
 /** THIRD PARTY */
-import {FormattedMessage} from "react-intl";
 
 /** COMPONENTS */
 import {AppContext, AppDispatchContext} from "providers/app_provider";
 import LanguageSwitcher from "./LanguageSwitcher";
 import NotificationsList from "./NotificationsList";
+import ProfileActionsList from "./ProfileActionsList";
 
 
 /** MATERIAL */
 import clsx from 'clsx';
-import {AppBar, Badge, ClickAwayListener, Grow, IconButton, makeStyles, MenuItem, MenuList, Paper, Popover, Popper, Toolbar, Tooltip, Typography,} from "@material-ui/core";
+import {AppBar, Badge, IconButton, makeStyles, Toolbar, Tooltip, Typography,} from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
 export default function MainToolbar() {
 	const classes = useStyles();
 
-	const {app_conf, toolbar_tools} = React.useContext(AppContext);
+	const {app_conf, user_info} = React.useContext(AppContext);
 	const {setAppConf} = React.useContext(AppDispatchContext);
 
 	const [notifications_anchor, setNotificationsAnchor] = React.useState(null);
@@ -159,149 +159,26 @@ export default function MainToolbar() {
 				{/*    </IconButton>*/}
 				{/*</Tooltip>*/}
 
-				<Tooltip title="Учетная запись" placement="left">
-					<IconButton color="inherit" onClick={handleProfileShow}>
-						<AccountCircleIcon/>
-					</IconButton>
-				</Tooltip>
+				{user_info ? (
+					<>
+						<Tooltip title="Учетная запись" placement="left">
+							<IconButton color="inherit" onClick={handleProfileShow}>
+								<AccountCircleIcon/>
+							</IconButton>
+						</Tooltip>
 
-				<Tooltip title="Уведомления" placement="left">
-					<IconButton color="inherit" onClick={handleNotificationsShow}>
-						<Badge badgeContent={3} color="secondary">
-							<NotificationsIcon/>
-						</Badge>
-					</IconButton>
-				</Tooltip>
+						<Tooltip title="Уведомления" placement="left">
+							<IconButton color="inherit" onClick={handleNotificationsShow}>
+								<Badge badgeContent={3} color="secondary">
+									<NotificationsIcon/>
+								</Badge>
+							</IconButton>
+						</Tooltip>
 
-				{/*<Tooltip title="Выйти">*/}
-				{/*    <IconButton color="inherit" onClick={() => logout()}>*/}
-				{/*        <ExitToAppIcon/>*/}
-				{/*    </IconButton>*/}
-				{/*</Tooltip>*/}
-
-				{/*<Popover*/}
-				{/*	open={open_profile}*/}
-				{/*	anchorEl={profile_anchor}*/}
-				{/*	onClose={handleProfileClose}*/}
-				{/*	anchorOrigin={{*/}
-				{/*		vertical: 'bottom',*/}
-				{/*		horizontal: 'right',*/}
-				{/*	}}*/}
-				{/*	transformOrigin={{*/}
-				{/*		vertical: 'top',*/}
-				{/*		horizontal: 'right',*/}
-				{/*	}}*/}
-				{/*>*/}
-				{/*	<ProfileActionsList/>*/}
-				{/*</Popover>*/}
-
-				<Popper open={open_profile} anchorEl={profile_anchor} role={undefined} transition disablePortal>
-					{({TransitionProps, placement}) => (
-						<Grow
-							{...TransitionProps}
-							style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
-						>
-							<Paper>
-								<ClickAwayListener onClickAway={handleProfileClose}>
-									<MenuList autoFocusItem={open_profile} id="menu-list-grow">
-										<MenuItem disabled>Администратор</MenuItem>
-										<MenuItem onClick={handleProfileClose}><FormattedMessage defaultMessage="Личный кабинет"/></MenuItem>
-										<MenuItem onClick={handleProfileClose}><FormattedMessage defaultMessage="Выйти"/></MenuItem>
-									</MenuList>
-								</ClickAwayListener>
-							</Paper>
-						</Grow>
-					)}
-				</Popper>
-
-				<Popover
-					open={open_notifications}
-					anchorEl={notifications_anchor}
-					onClose={handleNotificationsClose}
-					anchorOrigin={{
-						vertical: 'bottom',
-						horizontal: 'right',
-					}}
-					transformOrigin={{
-						vertical: 'top',
-						horizontal: 'right',
-					}}
-				>
-					<NotificationsList/>
-				</Popover>
-				{/*    {unread_notifications.length === 0 ? <Box style={{padding: '10px'}}><Typography>Новые уведомления отсутствуют</Typography></Box> :*/}
-				{/*        <React.Fragment>*/}
-				{/*            <List style={{minWidth: '500px', maxWidth: '500px'}}>*/}
-
-				{/*                <Link*/}
-				{/*                    style={{marginLeft: '20px'}}*/}
-				{/*                    component="button"*/}
-				{/*                    variant="body2"*/}
-				{/*                    onClick={() => {*/}
-				{/*                        markAllAsRead()*/}
-				{/*                            .then(() => {*/}
-				{/*                                getUnreadCount().then(count => setNotificationsUnreadCount(count))*/}
-				{/*                                getUnreadNotifications().then(items => {*/}
-				{/*                                    setUnreadNotifications(items);*/}
-				{/*                                })*/}
-				{/*                            })*/}
-				{/*                            .catch(error => console.log(error))*/}
-				{/*                    }}*/}
-				{/*                >*/}
-				{/*                    Отметит все как "прочитано"*/}
-				{/*                </Link>*/}
-
-
-				{/*                {unread_notifications.map((item, index) => {*/}
-				{/*                    return (*/}
-				{/*                        <ListItem key={item.id} role={undefined} dense>*/}
-				{/*                            <ListItemText primary={item.verb}/>*/}
-
-				{/*                            <ListItemSecondaryAction>*/}
-				{/*                                {item.description !== undefined || item.description !== '' || item.description !== 'NULL' ? (*/}
-				{/*                                    <IconButton edge="end" aria-label="view-results"*/}
-				{/*                                                onClick={() => {*/}
-				{/*                                                    markAsRead(item.id)*/}
-				{/*                                                        .then(() => {*/}
-				{/*                                                            getUnreadCount().then(count => setNotificationsUnreadCount(count))*/}
-				{/*                                                            getUnreadNotifications().then(items => {*/}
-				{/*                                                                setUnreadNotifications(items);*/}
-				{/*                                                            })*/}
-				{/*                                                        })*/}
-				{/*                                                        .catch(error => console.log(error))*/}
-
-				{/*                                                    const meta = JSON.parse(item.description);*/}
-				{/*                                                    if (meta?.request_id) {*/}
-				{/*                                                        history.push('/face-detect?request_ids[]=' + meta.request_id)*/}
-				{/*                                                    }*/}
-				{/*                                                }}>*/}
-				{/*                                        <VisibilityIcon/>*/}
-				{/*                                    </IconButton>*/}
-				{/*                                ) : null}*/}
-
-				{/*                                <IconButton edge="end" aria-label="mark-as-read"*/}
-				{/*                                            onClick={() => {*/}
-				{/*                                                markAsRead(item.id)*/}
-				{/*                                                    .then(() => {*/}
-				{/*                                                        getUnreadCount().then(count => setNotificationsUnreadCount(count))*/}
-				{/*                                                        getUnreadNotifications().then(items => {*/}
-				{/*                                                            setUnreadNotifications(items);*/}
-				{/*                                                        })*/}
-				{/*                                                    })*/}
-				{/*                                                    .catch(error => console.log(error))*/}
-				{/*                                            }}>*/}
-				{/*                                    <DoneAllIcon/>*/}
-				{/*                                </IconButton>*/}
-				{/*                            </ListItemSecondaryAction>*/}
-				{/*                        </ListItem>*/}
-				{/*                    )*/}
-				{/*                })}*/}
-				{/*            </List>*/}
-
-				{/*        </React.Fragment>*/}
-				{/*    }*/}
-
-				{/*</Popover>*/}
+						<ProfileActionsList user_info={user_info} open={open_profile} anchor={profile_anchor} onClose={handleProfileClose}/>
+						<NotificationsList user_info={user_info} open={open_notifications} anchor={notifications_anchor} onClose={handleNotificationsClose}/>
+					</>
+				) : null}
 
 			</Toolbar>
 		</AppBar>

@@ -137,10 +137,10 @@ export default function MainSidebar() {
             onClose={() => setAppConf(conf => ({...conf, sidebar_open: false}))}
         >
             <div className={classes.toolbarIcon}>
-				<Typography><FormattedMessage defaultMessage="Главное меню" id="properties"/></Typography>
-				<IconButton onClick={() => setAppConf(conf => ({...conf, sidebar_open: false}))}>
-					<ChevronLeftIcon/>
-				</IconButton>
+                <Typography><FormattedMessage defaultMessage="Главное меню"/></Typography>
+                <IconButton onClick={() => setAppConf(conf => ({...conf, sidebar_open: false}))}>
+                    <ChevronLeftIcon/>
+                </IconButton>
             </div>
             <Divider/>
             <NestedListMenu menu_items={makeTree(menu, 'id', 'parent')}/>

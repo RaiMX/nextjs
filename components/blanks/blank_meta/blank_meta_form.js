@@ -55,7 +55,7 @@ const BlankMetaForm = observer(function BlankMetaForm({ blank, onChange }) {
                 alignItems="flex-start"
                 spacing={2}
             >
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={12}>
                     <Controller
                         name="name"
                         control={control}
@@ -66,7 +66,9 @@ const BlankMetaForm = observer(function BlankMetaForm({ blank, onChange }) {
                             onChange={onChange}
                             error={!!error}
                             helperText={error ? error.message : null}
+                            style={{width: '100%'}}
                         />}
+                        
                     />
                 </Grid>
 

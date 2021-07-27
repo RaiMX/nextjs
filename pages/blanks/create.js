@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './create.module.css'
 import { useRouter } from 'next/router'
 
 /** COMPONENTS */
@@ -90,15 +89,9 @@ const BlankCreate = observer(function BlankCreate() {
     const [blank_data, setBlankData] = React.useState();
     const [content_obj, setContentObj] = React.useState(blanksStore?.editor_state_obj ? blanksStore.editor_state_obj : undefined);
 
-    const onSubmit = data => {
-        console.log(data);
-
-        saveBlank();
-    };
-
     const createBlank = () => {
         api.post('/blanks/create', {
-            name: 'myblank',
+            name: blank_data.name,
             version: 1,
             editor_state: content_obj,
             entities_props: blanksStore.entities_props
@@ -109,7 +102,7 @@ const BlankCreate = observer(function BlankCreate() {
     const updateBlank = () => {
         api.post('/blanks/update', {
             id: id,
-            name: 'myblank',
+            name: blank_data.name,
             version: 1,
             editor_state: content_obj,
             entities_props: blanksStore.entities_props
@@ -204,7 +197,7 @@ const BlankCreate = observer(function BlankCreate() {
                         <Tab label={<FormattedMessage defaultMessage={'Вид Бланк'} />} {...a11yProps(2)} />
                         <Tab label={<FormattedMessage defaultMessage={'Вид Форма'} />} {...a11yProps(3)} />
                     </Tabs>
-                        {unsaved ? <Button className={classes.tabButton} variant={'contained'} color={'secondary'} ><FormattedMessage id="Сохранить всё" /></Button> : <FormattedMessage id="Нет изменений" />}
+                        {unsaved ? <Button className={classes.tabButton} variant={'contained'} color={'secondary'} onClick={() => saveBlank()} ><FormattedMessage id="Сохранить всё" /></Button> : <FormattedMessage id="Нет изменений" />}
                     </Toolbar>
                 </AppBar>
             </Grid>

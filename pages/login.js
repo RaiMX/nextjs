@@ -84,9 +84,8 @@ export default function Login() {
 	const handleForgotPassword = async e => {
 		e.preventDefault();
 		try {
-			const {tokens, user} = await forgotPassword(username);
-			setUserInfo(old => ({...old, user: user}))
-			await Router.push('/');
+			await forgotPassword(username);
+			setForgotPassword(false);
 		} catch (error) {
 			if (error.response?.data?.message) {
 				toast.error(error.response.data.message)

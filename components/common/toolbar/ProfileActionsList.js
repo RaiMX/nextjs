@@ -44,7 +44,7 @@ const ProfileActionsList = observer(function ProfileActionsList({user_info, open
 					<Paper>
 						<ClickAwayListener onClickAway={handleProfileClose}>
 							<MenuList autoFocusItem={open} id="menu-list-grow">
-								<MenuItem disabled>{user_info?.user?.name && user_info.user.name}</MenuItem>
+								<MenuItem disabled>{user_info?.user?.username && user_info.user.username}</MenuItem>
 								<MenuItem onClick={routeToUserProfile}><FormattedMessage defaultMessage="Личный кабинет"/></MenuItem>
 								<MenuItem onClick={logout}><FormattedMessage defaultMessage="Выйти"/></MenuItem>
 							</MenuList>

@@ -53,6 +53,7 @@ export class BlanksStore {
 
 			hydrate: action,
 			setEditorStateObj: action,
+			setEntitiesProps: action,
 			addEntity: action,
 			setEntityValue: action,
 			setEntityProperty: action,
@@ -80,6 +81,10 @@ export class BlanksStore {
 
 	setEditorStateObj = (obj) => {
 		this.editor_state_obj = obj;
+	}
+
+	setEntitiesProps = (obj) => {
+		this.entities_props = obj;
 	}
 
 	addEntity = (code, type, placeholder) => {

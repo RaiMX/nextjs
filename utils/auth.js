@@ -15,6 +15,8 @@ export const login = (credentials) => {
             .catch(error => {
                 if (error.response === undefined) {
                     toast.error('Не удалось подключиться к серверу')
+                } else if (error.response.status === 400) {
+                    toast.error('Имя пользователя или пароль неправильны')
                 } else if (error.response.status === 401) {
                     toast.error('Имя пользователя или пароль неправильны')
                 } else if (error.response.status === 403) {

@@ -41,6 +41,8 @@ const BlankEditor = observer(function BlankEditor({value, onChange, style = {}})
 
     const getInitialContent = () => value ? EditorState.createWithContent(convertFromRaw(value)) : EditorState.createEmpty()
 
+
+    const [redraw, setRedraw] = React.useState(0);
     const [editorState, setEditorState] = React.useState(getInitialContent);
     const [autocompleteState, setAutocompleteState] = React.useState(null);
     const [properties, setProperties] = React.useState(null);
@@ -55,6 +57,12 @@ const BlankEditor = observer(function BlankEditor({value, onChange, style = {}})
         setEditorState(renderPlaceholderText(editorState, autocompleteState, text));
         setAutocompleteState(null);
     }
+
+    // React.useEffect(() => {
+    //     if(blanksStore.editor_state_obj){
+    //         setEditorState(EditorState.createWithContent(convertFromRaw(blanksStore.editor_state_obj)));
+    //     }
+    // }, [blanksStore.editor_state_obj]);
 
     React.useEffect(() => {
         const contentState = editorState.getCurrentContent();
@@ -72,6 +80,7 @@ const BlankEditor = observer(function BlankEditor({value, onChange, style = {}})
                     blanksStore.setSelectedEntityCode(entity_data.code);
 
                     setEditorState(EditorState.moveSelectionToEnd(editorState));
+
                     setOpenProperties(true);
                     setProperties({
                         ...entity_data,
@@ -100,6 +109,7 @@ const BlankEditor = observer(function BlankEditor({value, onChange, style = {}})
     return (
         <div style={{...style}}>
             <Editor
+                redraw={redraw}
                 editorKey={'blank_editor'}
                 localization={{locale: 'ru',}}
                 customDecorators={decorators}

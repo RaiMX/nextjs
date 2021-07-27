@@ -1,19 +1,19 @@
 import React from 'react';
 import Head from 'next/head';
-import Router, {useRouter} from 'next/router';
+import Router, { useRouter } from 'next/router';
 
 /** COMPONENTS */
-import {STATIC_ROUTES} from "utils/CONSTANTS";
-import {AppContext} from 'providers/app_provider';
+import { STATIC_ROUTES } from "utils/CONSTANTS";
+import { AppContext } from 'providers/app_provider';
 import MainToolbar from 'components/common/toolbar/MainToolbar';
 import MainSidebar from "components/common/sidebar/MainSidebar";
-import {checkTokens} from "utils/auth";
+import { checkTokens } from "utils/auth";
 
 /** THIRD PARTY */
 /** MATERIAL */
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import {Container} from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 
@@ -31,11 +31,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-export default function Layout({Component, pageProps}) {
+export default function Layout({ Component, pageProps }) {
 	const classes = useStyles();
 
 	const router = useRouter();
-	const {app_conf, user_info} = React.useContext(AppContext);
+	const { app_conf, user_info } = React.useContext(AppContext);
 
 	const [page_loading, setPageLoading] = React.useState(false);
 	const [is_authenticated, setIsAuthenticated] = React.useState(true);
@@ -76,34 +76,57 @@ export default function Layout({Component, pageProps}) {
 		<React.Fragment>
 			<Head>
 				<title>{app_conf.route_name}</title>
-				<meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width"/>
-				<meta charSet="utf-8"/>
-				<link rel="stylesheet" type="text/css" href="/css/nprogress.css"/>
+				<meta
+					name="viewport"
+					content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
+				/>
+				<meta charSet="utf-8" />
+
+				{process.env.NODE_ENV === 'production' ? (
+					<>
+						<link rel="manifest" href="/manifest.json" />
+						<link
+							href="/icons/favicon-16x16.png"
+							rel="icon"
+							type="image/png"
+							sizes="16x16"
+						/>
+						<link
+							href="/icons/favicon-32x32.png"
+							rel="icon"
+							type="image/png"
+							sizes="32x32"
+						/>
+						<link rel="apple-touch-icon" href="/apple-icon.png"></link>
+					</>
+				) : null}
+
+				<link rel="stylesheet" type="text/css" href="/css/nprogress.css" />
 			</Head>
-			<CssBaseline/>
+			<CssBaseline />
 
 			{app_conf.toolbar_show ? (
 				<React.Fragment>
-					<div className={classes.appBarSpacer}/>
-					<MainToolbar/>
+					<div className={classes.appBarSpacer} />
+					<MainToolbar />
 				</React.Fragment>
 			) : null}
 
-			<MainSidebar/>
+			<MainSidebar />
 
 			<Container maxWidth="xl" className={classes.container + ' pages-content'}>
 				{
 					page_loading ? (
-							<Container maxWidth="sm">
-								<Box my={4}>
-									<Typography variant="h4" component="h1" gutterBottom>
-										Загрузка страницы
-									</Typography>
-								</Box>
-							</Container>
-						)
+						<Container maxWidth="sm">
+							<Box my={4}>
+								<Typography variant="h4" component="h1" gutterBottom>
+									Загрузка страницы
+								</Typography>
+							</Box>
+						</Container>
+					)
 						: is_authenticated ? <Component {...pageProps} />
-						: <div></div>
+							: <div></div>
 				}
 			</Container>
 		</React.Fragment>

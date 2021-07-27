@@ -107,6 +107,14 @@ export const menu = [
     {
         id: 3,
         parent: 2,
+        name: 'Список',
+        name_kk: 'Список',
+        to: '/blanks'
+    },
+    {
+        id: 4,
+        parent: 2,
+        hidden: true,
         name: 'Создание нового бланка',
         name_kk: 'Создание нового бланка',
         to: '/blanks/create'

@@ -62,12 +62,8 @@ const consoleResponseError = async error => {
                 toast.error(err_msg);
             })
         } else if (typeof error.response.data === 'object' && error.response.data !== null) {
-            for (const errorKey in error.response.data) {
-                if (error.response.data.hasOwnProperty(errorKey)) {
-                    error.response.data[errorKey].map(err_msg => {
-                        toast.error(`${errorKey}: ${err_msg}`);
-                    })
-                }
+            if(typeof error.response.data.message === 'string'){
+                toast.error(error.response.data.message);
             }
         } else {
             toast.error(error.response.data);

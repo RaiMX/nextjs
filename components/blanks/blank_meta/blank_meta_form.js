@@ -15,6 +15,14 @@ import { useForm, Controller } from "react-hook-form";
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, TextField, Button } from "@material-ui/core";
 
+import ruLocale from "date-fns/locale/ru";
+import DateFnsUtils from '@date-io/date-fns';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+    KeyboardDatePicker,
+} from '@material-ui/pickers';
+
 /** LOADING WITHOUT SSR because Component does not support SSR */
 // const TableFieldElement = dynamic(() => import('./elements/TableFieldElement'), { ssr: false });
 
@@ -39,12 +47,10 @@ const BlankMetaForm = observer(function BlankMetaForm({ blank, onChange }) {
 
     React.useEffect(() => {
 
-        if(blank){
-            reset({
-                name: blank.name
-            })
+        if (blank) {
+            reset({...blank})
         }
-    }, [blank && blank.name])
+    }, [blank])
 
     return (
         <form id="form-blank" onSubmit={handleSubmit(onSubmit)}>
@@ -59,16 +65,79 @@ const BlankMetaForm = observer(function BlankMetaForm({ blank, onChange }) {
                     <Controller
                         name="name"
                         control={control}
-                        defaultValue={blank ? blank.name : ''}
+                        defaultValue={blank?.name}
                         render={({ field: { onChange, value }, fieldState: { error } }) => <TextField
                             label="Название формы"
-                            value={value}
+                            value={value ? value : ''}
                             onChange={onChange}
                             error={!!error}
                             helperText={error ? error.message : null}
-                            style={{width: '100%'}}
+                            style={{ width: '100%' }}
                         />}
-                        
+
+                    />
+                </Grid>
+
+                <Grid item xs={12} md={12}>
+                    <Controller
+                        name="based_on"
+                        control={control}
+                        defaultValue={blank?.based_on}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => <TextField
+                            label="Основание утверждения"
+                            value={value ? value : ''}
+                            multiline
+                            onChange={onChange}
+                            error={!!error}
+                            helperText={error ? error.message : null}
+                            style={{ width: '100%' }}
+                        />}
+
+                    />
+                </Grid>
+
+                <Grid item xs={12} md={3}>
+                    <Controller
+                        name="doc_date"
+                        control={control}
+                        defaultValue={blank?.doc_date}
+                        render={({ field: { onChange, value }, fieldState: { error } }) =>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
+                                <KeyboardDatePicker
+                                    autoOk
+                                    disableToolbar
+                                    variant="inline"
+                                    format="dd.MM.yyyy"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="Дата утверждения"
+                                    value={value ? value : null}
+                                    onChange={onChange}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                    style={{ width: '100%', marginTop: 0 }}
+                                />
+                            </MuiPickersUtilsProvider>
+                        }
+                    />
+
+                </Grid>
+
+                <Grid item xs={12} md={3}>
+                    <Controller
+                        name="doc_number"
+                        control={control}
+                        defaultValue={blank?.doc_number}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => <TextField
+                            label="Номер документа"
+                            value={value ? value : ''}
+                            onChange={onChange}
+                            error={!!error}
+                            helperText={error ? error.message : null}
+                            style={{ width: '100%' }}
+                        />}
+
                     />
                 </Grid>
 

@@ -64,6 +64,10 @@ const consoleResponseError = async error => {
         } else if (typeof error.response.data === 'object' && error.response.data !== null) {
             if(typeof error.response.data.message === 'string'){
                 toast.error(error.response.data.message);
+            }else if(Array.isArray(error.response.data.message)){
+                error.response.data.message.map(err_msg => {
+                    toast.error(err_msg);
+                })
             }
         } else {
             toast.error(error.response.data);

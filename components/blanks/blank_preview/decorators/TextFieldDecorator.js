@@ -28,7 +28,7 @@ const TextFieldDecorator = observer(function TextFieldDecorator({entity_props}) 
 	}, [blanksStore.entities_props[entity_props.code]['value']])
 
 	return (
-		<Tooltip title={entity_props.description || null} placement="right-end">
+		<Tooltip title={entity_props.description || null} placement="bottom">
 			<TextField
 				error={entity_props?.allow_null === false && (value === undefined || value === '')}
 				// label={entity_props?.allow_null === false && (value === undefined || value === '') ? 'Обязательно' : ''}

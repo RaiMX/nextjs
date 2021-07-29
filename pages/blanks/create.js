@@ -23,6 +23,7 @@ import api from 'utils/axios';
 /** MATERIAL */
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Grid, Paper, TextField, AppBar, Tab, Tabs, Toolbar } from "@material-ui/core";
+import SubjectIcon from '@material-ui/icons/Subject';
 
 
 
@@ -91,8 +92,11 @@ const BlankCreate = observer(function BlankCreate() {
 
     const createBlank = () => {
         api.post('/blanks/create', {
-            name: blank_data.name,
             version: 1,
+            name: blank_data.name,
+            based_on: blank_data.based_on,
+            doc_date: blank_data.doc_date,
+            doc_number: blank_data.doc_number,
             editor_state: content_obj,
             entities_props: blanksStore.entities_props
         }).then(response => toast.success(intl.formatMessage({ id: 'Успешно сохранено!' })))
@@ -102,8 +106,11 @@ const BlankCreate = observer(function BlankCreate() {
     const updateBlank = () => {
         api.post('/blanks/update', {
             id: id,
-            name: blank_data.name,
             version: 1,
+            name: blank_data.name,
+            based_on: blank_data.based_on,
+            doc_date: blank_data.doc_date,
+            doc_number: blank_data.doc_number,
             editor_state: content_obj,
             entities_props: blanksStore.entities_props
         }).then(response => toast.success(intl.formatMessage({ id: 'Успешно сохранено!' })))

@@ -6,6 +6,7 @@ import * as CONSTANTS from "../../CONSTANTS"
 import SelectFieldProperties from "./SelectFieldProperties";
 import TextFieldProperties from "./TextFieldProperties";
 import NumberFieldProperties from "./NumberFieldProperties";
+import DateFieldProperties from "./DateFieldProperties";
 import TableFieldProperties from "./TableFieldProperties";
 
 /** THIRD PARTY */
@@ -43,6 +44,8 @@ const EntityPropertiesWrapper = observer(function EntityProperties() {
 				return <TextFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
 			case CONSTANTS.TYPE_NUMBER_FIELD:
 				return <NumberFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
+			case CONSTANTS.TYPE_DATE_FIELD:
+				return <DateFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
 			case CONSTANTS.TYPE_TABLE_FIELD:
 				return <TableFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
 			default:

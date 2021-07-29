@@ -24,7 +24,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Grid } from '@material-ui/core';
 
 /** DYNAMIC IMPORTS */
-const MaterialTable = dynamic(() => import('material-table'), {ssr: false})
+const MaterialTable = dynamic(() => import('material-table'), { ssr: false })
 
 const useStyles = makeStyles((theme) => ({
 	root: {}
@@ -39,6 +39,20 @@ const Index = observer(function Index() {
 
 	const [isLoading, setIsLoading] = React.useState(false);
 
+	const onRowDelete = (oldData) => {
+		return new Promise((resolve, reject) => {
+			api.delete(`/blanks/remove/${oldData.id}`)
+			.then(response => {
+				toast.success(intl.formatMessage({ id: 'Успешно удалено!' }))
+				resolve(true)
+			})
+			.catch(error => {
+				toast.error(intl.formatMessage({ id: 'Ошибка при удалении!' }))
+				reject(false)
+			})
+		})
+	}
+
 	return (
 		<Grid
 			container
@@ -48,9 +62,14 @@ const Index = observer(function Index() {
 		>
 			<Grid item xs={12} md={6}>
 				<MaterialTable
-					title="Формы"
+					title="Шаблоны форм"
 					tableRef={tableRef}
 					columns={[
+						{
+							title: 'Версия',
+							field: 'version',
+							type: 'numeric'
+						},
 						{
 							title: 'Название',
 							field: 'name',
@@ -72,6 +91,9 @@ const Index = observer(function Index() {
 								})
 						})
 					}}
+					editable={{
+						onRowDelete: oldData => onRowDelete(oldData)
+					}}
 					icons={mtTableIcons}
 					localization={mtLocalization}
 					options={{
@@ -84,9 +106,9 @@ const Index = observer(function Index() {
 						{
 							isFreeAction: true,
 							icon: () => <div className='view-blank-button'>
-								<mtTableIcons.Add/>
+								<mtTableIcons.Add />
 							</div>,
-							tooltip: intl.formatMessage({id: 'Создать новую форму'}),
+							tooltip: intl.formatMessage({ id: 'Создать новую форму' }),
 							onClick: (event, rowData) => {
 								Router.push(`/blanks/create`)
 							}
@@ -94,9 +116,9 @@ const Index = observer(function Index() {
 						{
 							isFreeAction: false,
 							icon: () => <div className='view-blank-button'>
-								<mtTableIcons.Edit/>
+								<mtTableIcons.Edit />
 							</div>,
-							tooltip: intl.formatMessage({id: 'Редактировать'}),
+							tooltip: intl.formatMessage({ id: 'Редактировать' }),
 							onClick: (event, rowData) => {
 								Router.push(`/blanks/create?id=${rowData.id}`)
 							}

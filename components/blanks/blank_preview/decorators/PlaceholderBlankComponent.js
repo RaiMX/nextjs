@@ -7,6 +7,7 @@ import * as CONSTANTS from "components/blanks/CONSTANTS";
 import SelectFieldDecorator from "./SelectFieldDecorator";
 import TextFieldDecorator from "./TextFieldDecorator";
 import NumberFieldDecorator from "./NumberFieldDecorator";
+import DateFieldDecorator from "./DateFieldDecorator";
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
@@ -45,6 +46,10 @@ const PlaceholderBlankComponent = observer(function PlaceholderFormComponent({ch
 		case CONSTANTS.TYPE_NUMBER_FIELD:
 			return (
 				<NumberFieldDecorator entity_props={entity_props}/>
+			)
+		case CONSTANTS.TYPE_DATE_FIELD:
+			return (
+				<DateFieldDecorator entity_props={entity_props}/>
 			)
 		case CONSTANTS.TYPE_TABLE_FIELD:
 			return (

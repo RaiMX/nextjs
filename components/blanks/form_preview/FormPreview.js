@@ -6,8 +6,10 @@ import {useStore} from 'store/store_provider'
 import * as CONSTANTS from "../CONSTANTS";
 import TextFieldElement from "./elements/TextFieldElement";
 import NumberFieldElement from "./elements/NumberFieldElement";
+import DateFieldElement from "./elements/DateFieldElement";
 import SelectFieldElement from "./elements/SelectFieldElement";
 // import TableFieldElement from "./elements/TableFieldElement";
+
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
 
@@ -43,6 +45,8 @@ const FormPreview = observer(function FormPreview({style = {}}) {
 					return <Grid key={entity_code} item xs={12} md={12}><NumberFieldElement entity_props={entity_properties}/></Grid>;
 				case CONSTANTS.TYPE_TABLE_FIELD:
 					return <Grid key={entity_code} item xs={12} md={12}><TableFieldElement entity_props={entity_properties}/></Grid>;
+				case CONSTANTS.TYPE_DATE_FIELD:
+					return <Grid key={entity_code} item xs={12} md={12}><DateFieldElement entity_props={entity_properties}/></Grid>;
 			}
 		})
 	}

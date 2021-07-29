@@ -28,10 +28,11 @@ const NumberFieldDecorator = observer(function NumberFieldDecorator({entity_prop
 	}, [blanksStore.entities_props[entity_props.code]['value']])
 
 	return (
-		<Tooltip title={entity_props.description || null} placement="right-end">
+		<Tooltip title={entity_props.description || null} placement="bottom">
 			<TextField
 				type={'number'}
 				size="small"
+				error={entity_props?.allow_null === false && (value === undefined || value === '')}
 				style={{width: value?.length * 9 + 20 || 200, maxWidth: 1000, marginTop: -5, marginLeft: 5, marginRight: 5}}
 				value={value || ''}
 				onChange={(e) => {

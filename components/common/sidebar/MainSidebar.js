@@ -100,15 +100,15 @@ export const menu = [
     {
         id: 2,
         parent: null,
-        name: 'Бланки',
-        name_kk: 'Бланки',
+        name: 'Документы',
+        name_kk: 'Документы',
         to: '/blanks'
     },
     {
         id: 3,
         parent: 2,
-        name: 'Список',
-        name_kk: 'Список',
+        name: 'Список шаблонов форм',
+        name_kk: 'Список шаблонов форм',
         to: '/blanks'
     },
     {

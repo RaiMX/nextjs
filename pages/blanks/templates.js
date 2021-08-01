@@ -41,7 +41,7 @@ const Index = observer(function Index() {
 
 	const onRowDelete = (oldData) => {
 		return new Promise((resolve, reject) => {
-			api.delete(`/blanks/remove/${oldData.id}`)
+			api.delete(`/blanks/remove-template/${oldData.id}`)
 			.then(response => {
 				toast.success(intl.formatMessage({ id: 'Успешно удалено!' }))
 				resolve(true)
@@ -78,7 +78,7 @@ const Index = observer(function Index() {
 					]}
 					data={query => {
 						return new Promise((resolve, reject) => {
-							api.get('/blanks/list').then(response => {
+							api.get('/blanks/list-templates').then(response => {
 								resolve({
 									data: response.data.results,
 									page: query.page,
@@ -105,22 +105,22 @@ const Index = observer(function Index() {
 					actions={[
 						{
 							isFreeAction: true,
-							icon: () => <div className='view-blank-button'>
+							icon: () => <div className='create-blank-button'>
 								<mtTableIcons.Add />
 							</div>,
 							tooltip: intl.formatMessage({ id: 'Создать новую форму' }),
 							onClick: (event, rowData) => {
-								Router.push(`/blanks/create`)
+								Router.push(`/blanks/edit`)
 							}
 						},
 						{
 							isFreeAction: false,
-							icon: () => <div className='view-blank-button'>
+							icon: () => <div className='edit-blank-button'>
 								<mtTableIcons.Edit />
 							</div>,
 							tooltip: intl.formatMessage({ id: 'Редактировать' }),
 							onClick: (event, rowData) => {
-								Router.push(`/blanks/create?id=${rowData.id}`)
+								Router.push(`/blanks/edit?id=${rowData.id}`)
 							}
 						},
 					]}

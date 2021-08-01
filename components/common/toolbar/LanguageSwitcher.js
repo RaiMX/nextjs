@@ -14,7 +14,7 @@ export default function LanguageSwitcher() {
 
 	const switchLanguage = (e) => {
 		const locale = e.target.value;
-		router.push(router.pathname, router.pathname, {locale});
+		router.push('/', '/', {locale});
 		if (cookie.NEXT_LOCALE !== locale) {
 			setCookie("NEXT_LOCALE", locale, {path: "/"});
 		}

@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     root: {}
 }))
 
-const MetaForm = observer(function MetaForm({ blank, onChange }) {
+const MetaView = observer(function MetaView({ blank, onChange }) {
     const classes = useStyles();
     const { blanksStore } = useStore();
 
@@ -30,11 +30,11 @@ const MetaForm = observer(function MetaForm({ blank, onChange }) {
 
     return (
         <BlankMetaForm
-            read_only={false}
+            read_only={true}
             blank={blank}
             onChange={onChange}
         />
     );
 })
 
-export default MetaForm
+export default MetaView

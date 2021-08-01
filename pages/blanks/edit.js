@@ -5,8 +5,8 @@ import { useRouter } from 'next/router'
 /** COMPONENTS */
 import { AppContext, AppDispatchContext } from "providers/app_provider";
 import BlankEditor from 'components/blanks/blank_editor/BlankEditor';
-import BlankPreview from 'components/blanks/blank_preview/BlankPreview'
-import FormPreview from "../../components/blanks/form_preview/FormPreview";
+import BlankPreview from 'components/blanks/blank_view/BlankPreview'
+import FormPreview from 'components/blanks/form_view/FormPreview';
 import BlankMetaForm from 'components/blanks/blank_meta/blank_meta_form';
 
 /** THIRD PARTY */
@@ -22,10 +22,7 @@ import api from 'utils/axios';
 
 /** MATERIAL */
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Grid, Paper, TextField, AppBar, Tab, Tabs, Toolbar } from "@material-ui/core";
-import SubjectIcon from '@material-ui/icons/Subject';
-
-
+import { Button, Grid, Paper, TextField, AppBar, Tab, Tabs, Toolbar, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -33,6 +30,13 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(4),
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
+        overflow: 'auto',
+    },
+    titlePaper: {
+        padding: theme.spacing(4),
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
+        marginBottom: theme.spacing(2),
         overflow: 'auto',
     },
     tabButton: {
@@ -72,7 +76,7 @@ function a11yProps(index) {
     };
 }
 
-const BlankCreate = observer(function BlankCreate() {
+const BlankEdit = observer(function BlankEdit() {
     const classes = useStyles();
 
     const { blanksStore } = useStore()
@@ -84,14 +88,14 @@ const BlankCreate = observer(function BlankCreate() {
     const { app_conf } = React.useContext(AppContext);
     const { setAppConf } = React.useContext(AppDispatchContext);
 
-
+    const [read_only, setReadOnly] = React.useState(false);
     const [unsaved, setUnsaved] = React.useState(false);
     const [tab_index, setTabIndex] = React.useState(0);
     const [blank_data, setBlankData] = React.useState();
     const [content_obj, setContentObj] = React.useState(blanksStore?.editor_state_obj ? blanksStore.editor_state_obj : undefined);
 
     const createBlank = () => {
-        api.post('/blanks/create', {
+        api.post('/blanks/create-template', {
             version: 1,
             name: blank_data.name,
             based_on: blank_data.based_on,
@@ -99,12 +103,15 @@ const BlankCreate = observer(function BlankCreate() {
             doc_number: blank_data.doc_number,
             editor_state: content_obj,
             entities_props: blanksStore.entities_props
-        }).then(response => toast.success(intl.formatMessage({ id: 'Успешно сохранено!' })))
+        }).then(response => {
+            toast.success(intl.formatMessage({ id: 'Успешно сохранено!' }));
+            setUnsaved(false);
+        })
             .catch(error => toast.error(intl.formatMessage({ id: 'Ошибка при сохранении!' })))
     }
 
     const updateBlank = () => {
-        api.post('/blanks/update', {
+        api.post('/blanks/update-template', {
             id: id,
             version: 1,
             name: blank_data.name,
@@ -113,7 +120,10 @@ const BlankCreate = observer(function BlankCreate() {
             doc_number: blank_data.doc_number,
             editor_state: content_obj,
             entities_props: blanksStore.entities_props
-        }).then(response => toast.success(intl.formatMessage({ id: 'Успешно сохранено!' })))
+        }).then(response => {
+            toast.success(intl.formatMessage({ id: 'Успешно сохранено!' }));
+            setUnsaved(false);
+        })
             .catch(error => toast.error(intl.formatMessage({ id: 'Ошибка при сохранении!' })))
     }
 
@@ -126,7 +136,7 @@ const BlankCreate = observer(function BlankCreate() {
     }
 
     const checkUnsaved = () => {
-        if(!unsaved){
+        if (!unsaved && !read_only) {
             setUnsaved(true);
         }
     }
@@ -142,20 +152,10 @@ const BlankCreate = observer(function BlankCreate() {
         checkUnsaved();
     }
 
-    //start the clock when the component is mounted
-    // React.useEffect(() => {
-    //     store.appStore.start()
-    //
-    //     //stop the clock when the component unmounts
-    //     return () => {
-    //         store.appStore.stop()
-    //     }
-    // }, [store.appStore])
-
     React.useEffect(() => {
 
         if (id !== undefined) {
-            api.get(`blanks/${id}`).then(response => {
+            api.get(`blanks/template/${id}`).then(response => {
                 const blank = response.data;
 
                 blanksStore.setEditorStateObj({
@@ -171,6 +171,15 @@ const BlankCreate = observer(function BlankCreate() {
                     entityMap: blank.editor_state.entityMap || {}
                 });
             })
+
+            api.get(`blanks/list-filled-by-template/${id}`)
+                .then(response => {
+                    if (response.data.results.length > 0) {
+                        setReadOnly(true);
+                        toast.warning(intl.formatMessage({id: 'Уже имеются формы заполненные по этому шаблону! Изменение шаблона невозможно!'}))
+                    }
+                })
+
         } else {
             setContentObj({ blocks: [], entityMap: {} });
         }
@@ -188,23 +197,26 @@ const BlankCreate = observer(function BlankCreate() {
             alignItems="flex-start"
             spacing={2}
         >
-            <Grid item xs={12} md={12}> 
+            <Grid item xs={12} md={12}>
                 <AppBar position="static" color="default">
                     <Toolbar variant="dense">
-                    <Tabs
-                        value={tab_index} 
-                        onChange={(event, new_value) => setTabIndex(new_value)} 
-                        aria-label="constructor tabs"
-                        indicatorColor="primary"
-                        textColor="primary"
-                        style={{flexGrow: 1}}
-                    >
-                        <Tab label={<FormattedMessage defaultMessage={'Данные'} />} {...a11yProps(0)} />
-                        <Tab label={<FormattedMessage defaultMessage={'Конструктор'} />} {...a11yProps(1)} />
-                        <Tab label={<FormattedMessage defaultMessage={'Вид Бланк'} />} {...a11yProps(2)} />
-                        <Tab label={<FormattedMessage defaultMessage={'Вид Форма'} />} {...a11yProps(3)} />
-                    </Tabs>
-                        {unsaved ? <Button className={classes.tabButton} variant={'contained'} color={'secondary'} onClick={() => saveBlank()} ><FormattedMessage id="Сохранить всё" /></Button> : <FormattedMessage id="Нет изменений" />}
+                        <Tabs
+                            value={tab_index}
+                            onChange={(event, new_value) => setTabIndex(new_value)}
+                            aria-label="constructor tabs"
+                            indicatorColor="primary"
+                            textColor="primary"
+                            style={{ flexGrow: 1 }}
+                        >
+                            <Tab label={<FormattedMessage defaultMessage={'Данные'} />} {...a11yProps(0)} />
+                            <Tab label={<FormattedMessage defaultMessage={'Конструктор'} />} {...a11yProps(1)} />
+                            <Tab label={<FormattedMessage defaultMessage={'Вид Бланк'} />} {...a11yProps(2)} />
+                            <Tab label={<FormattedMessage defaultMessage={'Вид Форма'} />} {...a11yProps(3)} />
+                        </Tabs>
+                        {unsaved && !read_only ? <Button className={classes.tabButton} variant={'contained'} color={'secondary'} onClick={() => saveBlank()} ><FormattedMessage id="Сохранить всё" /></Button> 
+                            : read_only ? <FormattedMessage defaultMessage="Уже имеются формы заполненные по этому шаблону" />
+                            : <FormattedMessage id="Нет изменений" />
+                        }
                     </Toolbar>
                 </AppBar>
             </Grid>
@@ -215,7 +227,7 @@ const BlankCreate = observer(function BlankCreate() {
                         elevation={3}
                         className={classes.paper}
                     >
-                        <BlankMetaForm 
+                        <BlankMetaForm
                             blank={blank_data}
                             onChange={handleMetaFormChange}
                         />
@@ -241,11 +253,18 @@ const BlankCreate = observer(function BlankCreate() {
 
             <Grid item xs={12} md={8}>
                 <TabPanel value={tab_index} index={2}>
+                    <div
+                        className={classes.titlePaper}
+                    >
+                        <Typography style={{ textAlign: 'center' }}>{blank_data?.name}</Typography>
+                    </div>
+
                     <Paper
                         elevation={3}
                         className={classes.paper}
                     >
                         <BlankPreview
+                            blank={blank_data}
                             value={content_obj}
                             onChange={(content) => {
 
@@ -257,6 +276,12 @@ const BlankCreate = observer(function BlankCreate() {
 
             <Grid item xs={12} md={8}>
                 <TabPanel value={tab_index} index={3}>
+                    <div
+                        className={classes.titlePaper}
+                    >
+                        <Typography style={{ textAlign: 'center' }}>{blank_data?.name}</Typography>
+                    </div>
+
                     <Paper
                         elevation={3}
                         className={classes.paper}
@@ -270,4 +295,4 @@ const BlankCreate = observer(function BlankCreate() {
     );
 })
 
-export default BlankCreate;
+export default BlankEdit;

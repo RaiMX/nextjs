@@ -53,7 +53,7 @@ const consoleResponseError = async error => {
             position: "top-center"
         });
     } else if (error.response?.status === 404) {
-        toast.warning('404 - ресурс не найден', {
+        toast.warning('404 - ресурс не найден ' + error.config.url, {
             position: "top-right"
         });
     } else if (error.response?.status === 400) {

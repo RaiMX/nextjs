@@ -5,9 +5,10 @@ enableStaticRendering(typeof window === 'undefined')
 
 export class BlanksStore {
 	id = null;
-	editor_state_obj = null
-	entities_props = {}
-	selected_entity_code = null
+	editor_state_obj = null;
+	entities_props = {};
+	change_timestamp = new Date().getTime() / 1000;
+	selected_entity_code = null;
 	select_lists = {
 		orgs: {
 			code: 'orgs',
@@ -37,7 +38,7 @@ export class BlanksStore {
 				},
 			]
 		},
-	}
+	};
 
 	constructor(rootStore) {
 		this.rootStore = rootStore
@@ -47,6 +48,7 @@ export class BlanksStore {
 
 			editor_state_obj: observable,
 			entities_props: observable,
+			change_timestamp: observable,
 			selected_entity_code: observable,
 			select_lists: observable,
 			select_lists_names: computed,
@@ -105,6 +107,7 @@ export class BlanksStore {
 	setEntityValue = (code, value) => {
 		if (this.entities_props[code] !== undefined) {
 			this.entities_props[code]['value'] = value;
+			this.change_timestamp = new Date().getTime() / 1000;
 			return true;
 		}
 		return false;

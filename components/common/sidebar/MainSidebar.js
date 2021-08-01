@@ -107,17 +107,32 @@ export const menu = [
     {
         id: 3,
         parent: 2,
-        name: 'Список шаблонов форм',
-        name_kk: 'Список шаблонов форм',
-        to: '/blanks'
+        name: 'Шаблоны форм',
+        name_kk: 'Шаблоны форм',
+        to: '/blanks/templates'
     },
     {
         id: 4,
         parent: 2,
         hidden: true,
-        name: 'Создание нового бланка',
-        name_kk: 'Создание нового бланка',
+        name: 'Создание нового шаблона',
+        name_kk: 'Создание нового шаблона',
         to: '/blanks/create'
+    },
+    {
+        id: 5,
+        parent: 2,
+        name: 'Формы',
+        name_kk: 'Формы',
+        to: '/blanks/blanks'
+    },
+    {
+        id: 6,
+        parent: 2,
+        hidden: true,
+        name: 'Заполнение формы',
+        name_kk: 'Заполнение формы',
+        to: '/blanks/fill'
     },
 ]
 

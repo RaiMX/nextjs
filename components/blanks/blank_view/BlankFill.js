@@ -8,9 +8,10 @@ import {decorators} from "./decorators/form_decorators";
 import {convertFromRaw, convertToRaw, EditorState} from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
+/** DYNAMIC IMPORT */
 const Editor = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor), {ssr: false})
 
-export default function BlankPreview({value, onChange, style = {}}) {
+export default function BlankPreview({blank, value, onChange, style = {}}) {
 
     const getInitialContent = () => {
         if (value) {

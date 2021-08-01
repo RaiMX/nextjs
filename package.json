@@ -39,7 +39,7 @@
   "uuid": "^8.3.2"
  },
  "scripts": {
-  "dev_front": "next dev",
+  "start:dev": "next dev",
   "build": "npm run i18n && next build",
   "start": "next start",
   "extract:i18n": "formatjs extract '{pages,components,sections}/**/*.{js,ts,tsx}' --format simple --id-interpolation-pattern '[sha512:contenthash:base64:6]' --out-file content/locales/ru.json",

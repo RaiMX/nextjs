@@ -49,8 +49,8 @@ const consoleResponseError = async error => {
 
     } else if (error.response?.status === 403) {
         console.log('Access denied');
-        toast.error('Доступ к данному действию запрещен!', {
-            position: "top-center"
+        toast.error(`Доступ к данному действию запрещен! ${error.config.url}`, {
+            position: "top-right"
         });
     } else if (error.response?.status === 404) {
         toast.warning('404 - ресурс не найден ' + error.config.url, {

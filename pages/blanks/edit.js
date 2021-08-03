@@ -85,7 +85,7 @@ const BlankEdit = observer(function BlankEdit() {
     const router = useRouter()
     const { id } = router.query;
 
-    const { app_conf } = React.useContext(AppContext);
+    const { app_conf, user_info } = React.useContext(AppContext);
     const { setAppConf } = React.useContext(AppDispatchContext);
 
     const [read_only, setReadOnly] = React.useState(false);
@@ -97,6 +97,7 @@ const BlankEdit = observer(function BlankEdit() {
     const createBlank = () => {
         api.post('/blanks/create-template', {
             version: 1,
+            created_by: user_info.user.id,
             name: blank_data.name,
             based_on: blank_data.based_on,
             doc_date: blank_data.doc_date,
@@ -104,16 +105,18 @@ const BlankEdit = observer(function BlankEdit() {
             editor_state: content_obj,
             entities_props: blanksStore.entities_props
         }).then(response => {
-            toast.success(intl.formatMessage({ id: 'Успешно сохранено!' }));
+            toast.success(intl.formatMessage({ id: 'saved_successfully', defaultMessage: 'Успешно сохранено!' }));
             setUnsaved(false);
         })
-            .catch(error => toast.error(intl.formatMessage({ id: 'Ошибка при сохранении!' })))
+            .catch(error => toast.error(intl.formatMessage({ id: 'error_saving', defaultMessage: 'Ошибка при сохранении!' })))
     }
 
     const updateBlank = () => {
         api.post('/blanks/update-template', {
             id: id,
             version: 1,
+            created_by: blank_data.created_by || user_info.user.id,
+            updated_by: user_info.user.id,
             name: blank_data.name,
             based_on: blank_data.based_on,
             doc_date: blank_data.doc_date,
@@ -121,10 +124,10 @@ const BlankEdit = observer(function BlankEdit() {
             editor_state: content_obj,
             entities_props: blanksStore.entities_props
         }).then(response => {
-            toast.success(intl.formatMessage({ id: 'Успешно сохранено!' }));
+            toast.success(intl.formatMessage({ id: 'saved_successfully', defaultMessage: 'Успешно сохранено!' }));
             setUnsaved(false);
         })
-            .catch(error => toast.error(intl.formatMessage({ id: 'Ошибка при сохранении!' })))
+        .catch(error => toast.error(intl.formatMessage({ id: 'error_saving', defaultMessage: 'Ошибка при сохранении!' })))
     }
 
     const saveBlank = () => {
@@ -213,9 +216,9 @@ const BlankEdit = observer(function BlankEdit() {
                             <Tab label={<FormattedMessage defaultMessage={'Вид Бланк'} />} {...a11yProps(2)} />
                             <Tab label={<FormattedMessage defaultMessage={'Вид Форма'} />} {...a11yProps(3)} />
                         </Tabs>
-                        {unsaved && !read_only ? <Button className={classes.tabButton} variant={'contained'} color={'secondary'} onClick={() => saveBlank()} ><FormattedMessage id="Сохранить всё" /></Button> 
+                        {unsaved && !read_only ? <Button className={classes.tabButton} variant={'contained'} color={'secondary'} onClick={() => saveBlank()} ><FormattedMessage id="save_all" defaultMessage="Сохранить всё" /></Button> 
                             : read_only ? <FormattedMessage defaultMessage="Уже имеются формы заполненные по этому шаблону" />
-                            : <FormattedMessage id="Нет изменений" />
+                            : <FormattedMessage id="no_changes" defaultMessage="Нет изменений" />
                         }
                     </Toolbar>
                 </AppBar>

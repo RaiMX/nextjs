@@ -3,6 +3,8 @@
  "version": "4.0.0",
  "private": true,
  "dependencies": {
+  "@casl/ability": "^5.3.1",
+  "@casl/react": "^2.3.0",
   "@date-io/date-fns": "^1.3.13",
   "@fontsource/roboto": "latest",
   "@handsontable/react": "^9.0.1",

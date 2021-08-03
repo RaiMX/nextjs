@@ -49,11 +49,11 @@ const Index = observer(function Index() {
 		return new Promise((resolve, reject) => {
 			api.delete(`/blanks/remove-filled/${oldData.id}`)
 				.then(response => {
-					toast.success(intl.formatMessage({ id: 'Успешно удалено!' }))
+					toast.success(intl.formatMessage({ id: 'successfully_deleted', defaultMessage: 'Успешно удалено!' }))
 					resolve(true)
 				})
 				.catch(error => {
-					toast.error(intl.formatMessage({ id: 'Ошибка при удалении!' }))
+					toast.error(intl.formatMessage({ id: 'error_deleting', defaultMessage: 'Ошибка при удалении!' }))
 					reject(false)
 				})
 		})
@@ -127,7 +127,7 @@ const Index = observer(function Index() {
 								icon: () => <div className='fill-blank-button'>
 									<mtTableIcons.Add />
 								</div>,
-								tooltip: intl.formatMessage({ id: 'Заполнить форму' }),
+								tooltip: intl.formatMessage({ id: 'fill_form', defaultMessage: 'Заполнить форму' }),
 								onClick: (event, rowData) => {
 									setFillDialog(true)
 								}
@@ -137,7 +137,7 @@ const Index = observer(function Index() {
 								icon: () => <div className='edit-blank-button'>
 									<mtTableIcons.Edit />
 								</div>,
-								tooltip: intl.formatMessage({ id: 'Редактировать' }),
+								tooltip: intl.formatMessage({ id: 'edit', defaultMessage: 'Редактировать' }),
 								onClick: (event, rowData) => {
 									Router.push(`/blanks/fill?id=${rowData.id}&template_id=${rowData.template_id}`)
 								}

@@ -84,7 +84,7 @@ const BlankFillWrapper = observer(function BlankFillWrapper() {
     const router = useRouter()
     const { id, template_id } = router.query;
 
-    const { app_conf } = React.useContext(AppContext);
+    const { app_conf, user_info } = React.useContext(AppContext);
     const { setAppConf } = React.useContext(AppDispatchContext);
 
 
@@ -96,6 +96,7 @@ const BlankFillWrapper = observer(function BlankFillWrapper() {
     const createBlank = () => {
         api.post('/blanks/create-filled', {
             variant: 1,
+            created_by: user_info.user.id,
             name: blank_data.name,
             template_id: template_id,
             entities_props: blanksStore.entities_props
@@ -110,6 +111,8 @@ const BlankFillWrapper = observer(function BlankFillWrapper() {
         api.post('/blanks/update-filled', {
             id: id,
             variant: 1,
+            created_by: blank_data.created_by,
+            updated_by: user_info.user.id,
             name: blank_data.name,
             template_id: template_id,
             entities_props: blanksStore.entities_props
@@ -207,7 +210,7 @@ const BlankFillWrapper = observer(function BlankFillWrapper() {
                             <Tab label={<FormattedMessage defaultMessage={'Вид Бланк'} />} {...a11yProps(1)} />
                             <Tab label={<FormattedMessage defaultMessage={'Вид Форма'} />} {...a11yProps(2)} />
                         </Tabs>
-                        {unsaved ? <Button className={classes.tabButton} variant={'contained'} color={'secondary'} onClick={() => saveBlank()} ><FormattedMessage id="Сохранить всё" /></Button> : <FormattedMessage id="Нет изменений" />}
+                        {unsaved ? <Button className={classes.tabButton} variant={'contained'} color={'secondary'} onClick={() => saveBlank()} ><FormattedMessage id="save_all" defaultMessage="Сохранить всё" /></Button> : <FormattedMessage id="no_changes" defaultMessage="Нет изменений" />}
                     </Toolbar>
                 </AppBar>
             </Grid>

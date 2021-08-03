@@ -13,7 +13,7 @@ import { useForm, Controller } from "react-hook-form";
 
 /** MATERIAL */
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, TextField, Button } from "@material-ui/core";
+import { Grid, TextField, Button, Typography } from "@material-ui/core";
 
 import ruLocale from "date-fns/locale/ru";
 import DateFnsUtils from '@date-io/date-fns';
@@ -143,6 +143,11 @@ const BlankMetaForm = observer(function BlankMetaForm({ blank, read_only, onChan
                         />}
 
                     />
+                </Grid>
+                
+                <Grid item xs={12} md={12}>
+                    <Typography variant="caption"><FormattedMessage id="сreated_by" defaultMessage="Кем создано" />: {blank?.created_by} </Typography>
+                    <Typography variant="caption"><FormattedMessage id="updated_by" defaultMessage="Кем обновлено" />: {blank?.updated_by}</Typography>
                 </Grid>
 
                 {read_only ? null : (

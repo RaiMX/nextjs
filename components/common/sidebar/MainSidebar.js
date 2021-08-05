@@ -134,6 +134,21 @@ export const menu = [
         name_kk: 'Заполнение формы',
         to: '/blanks/fill'
     },
+
+    {
+        id: 7,
+        parent: null,
+        name: 'Администрирование',
+        name_kk: 'Администрирование',
+        to: '/admin'
+    },
+    {
+        id: 8,
+        parent: 7,
+        name: 'Списки',
+        name_kk: 'Списки',
+        to: '/admin/generic-lists'
+    },
 ]
 
 

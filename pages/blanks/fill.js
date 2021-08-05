@@ -89,7 +89,7 @@ const BlankFillWrapper = observer(function BlankFillWrapper() {
 
 
     const [unsaved, setUnsaved] = React.useState(false);
-    const [tab_index, setTabIndex] = React.useState(0);
+    const [tab_index, setTabIndex] = React.useState(1);
     const [blank_data, setBlankData] = React.useState();
     const [content_obj, setContentObj] = React.useState(blanksStore?.editor_state_obj ? blanksStore.editor_state_obj : undefined);
 

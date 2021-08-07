@@ -2,18 +2,20 @@ import React from 'react';
 import dynamic from "next/dynamic";
 
 /** COMPONENTS */
-import {useStore} from 'store/store_provider'
+import { useStore } from 'store/store_provider'
 import * as CONSTANTS from "components/blanks/CONSTANTS";
 import SelectFieldDecorator from "./SelectFieldDecorator";
 import TextFieldDecorator from "./TextFieldDecorator";
 import NumberFieldDecorator from "./NumberFieldDecorator";
 import DateFieldDecorator from "./DateFieldDecorator";
+import TimeFieldDecorator from "./TimeFieldDecorator";
+import DateTimeFieldDecorator from "./DateTimeFieldDecorator";
 
 /** THIRD PARTY */
-import {observer} from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 
 /** MATERIAL */
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -21,11 +23,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 /** LOADING WITHOUT SSR because Component does not support SSR */
-const TableFieldDecorator = dynamic(() => import('./TableFieldDecorator'), {ssr: false});
+const TableFieldDecorator = dynamic(() => import('./TableFieldDecorator'), { ssr: false });
 
 
-const PlaceholderBlankComponent = observer(function PlaceholderFormComponent({children, entityKey, contentState}) {
-	const {blanksStore} = useStore()
+const PlaceholderBlankComponent = observer(function PlaceholderFormComponent({ children, entityKey, contentState }) {
+	const { blanksStore } = useStore()
 
 	const entity = contentState.getEntity(entityKey);
 	const type = entity.getType();
@@ -37,23 +39,31 @@ const PlaceholderBlankComponent = observer(function PlaceholderFormComponent({ch
 	switch (entity_props.type) {
 		case CONSTANTS.TYPE_SELECT_FIELD:
 			return (
-				<SelectFieldDecorator entity_props={entity_props}/>
+				<SelectFieldDecorator entity_props={entity_props} />
 			);
 		case CONSTANTS.TYPE_TEXT_FIELD:
 			return (
-				<TextFieldDecorator entity_props={entity_props}/>
+				<TextFieldDecorator entity_props={entity_props} />
 			)
 		case CONSTANTS.TYPE_NUMBER_FIELD:
 			return (
-				<NumberFieldDecorator entity_props={entity_props}/>
+				<NumberFieldDecorator entity_props={entity_props} />
 			)
 		case CONSTANTS.TYPE_DATE_FIELD:
 			return (
-				<DateFieldDecorator entity_props={entity_props}/>
+				<DateFieldDecorator entity_props={entity_props} />
+			)
+		case CONSTANTS.TYPE_TIME_FIELD:
+			return (
+				<TimeFieldDecorator entity_props={entity_props} />
+			)
+		case CONSTANTS.TYPE_DATETIME_FIELD:
+			return (
+				<DateTimeFieldDecorator entity_props={entity_props} />
 			)
 		case CONSTANTS.TYPE_TABLE_FIELD:
 			return (
-				<TableFieldDecorator entity_props={entity_props}/>
+				<TableFieldDecorator entity_props={entity_props} />
 			)
 	}
 })

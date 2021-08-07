@@ -1,5 +1,6 @@
-import {action, computed, makeObservable, observable} from 'mobx'
-import {enableStaticRendering} from 'mobx-react-lite'
+import { action, computed, makeObservable, observable } from 'mobx'
+import { enableStaticRendering } from 'mobx-react-lite'
+import api from 'utils/axios';
 
 enableStaticRendering(typeof window === 'undefined')
 
@@ -9,6 +10,7 @@ export class BlanksStore {
 	entities_props = {};
 	change_timestamp = new Date().getTime() / 1000;
 	selected_entity_code = null;
+	selected_lists = {};
 	select_lists = {
 		orgs: {
 			code: 'orgs',
@@ -61,6 +63,8 @@ export class BlanksStore {
 			setEntityProperty: action,
 			setSelectedEntityCode: action,
 			clearBlank: action,
+			fetchSelectLists: action,
+			fetchSelectListValues: action,
 		})
 	}
 
@@ -129,5 +133,45 @@ export class BlanksStore {
 		this.editor_state_obj = null;
 		this.entities_props = {};
 		this.selected_entity_code = null;
+	}
+
+	fetchSelectLists = () => {
+		return new Promise((resolve, reject) => {
+			api.get('lists')
+				.then(response => {
+					const lists = response.data;
+					const select_lists = {};
+					for (let i = 0; i < lists.length; i++) {
+						const list = lists[i];
+						const list_code = 'list_' + list.id;
+						select_lists[list_code] = {
+							code: list_code,
+							label: list.name,
+							values: []
+						}
+					}
+
+					this.select_lists = select_lists;
+					resolve(select_lists);
+				})
+				.catch(error => reject(false))
+		})
+
+	}
+
+	fetchSelectListValues = () => {
+		return new Promise((resolve, reject) => {
+			Object.keys(this.entities_props).map(entity_code => {
+				Object.keys(this.entities_props[entity_code]).map(entity_prop => {
+					if (entity_prop === 'list_code') {
+						api.get(`generic-list/get-all/${this.entities_props[entity_code][entity_prop]}`)
+							.then(response => {
+								this.select_lists[this.entities_props[entity_code][entity_prop]].values = response.data;
+							})
+					}
+				})
+			})
+			resolve()
+		})
 	}
 }

@@ -15,8 +15,7 @@ import ruLocale from "date-fns/locale/ru";
 import DateFnsUtils from '@date-io/date-fns';
 import {
 	MuiPickersUtilsProvider,
-	KeyboardTimePicker,
-	KeyboardDatePicker,
+	KeyboardDateTimePicker
 } from '@material-ui/pickers';
 
 
@@ -46,12 +45,11 @@ const DateFieldDecorator = observer(function DateFieldDecorator({ entity_props }
 
 	return (
 		<MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
-			<KeyboardDatePicker
-				autoOk
+			<KeyboardDateTimePicker
 				size="small"
-				// disableToolbar
 				variant="inline"
-				format="dd.MM.yyyy"
+				ampm={false}
+				format="dd.MM.yyyy HH:mm"
 				margin="normal"
 				value={value || null}
 				title={entity_props.description || null}
@@ -65,7 +63,7 @@ const DateFieldDecorator = observer(function DateFieldDecorator({ entity_props }
 					'aria-label': 'change date',
 				}}
 				error={entity_props?.allow_null === false && (value === undefined || value === '')}
-				style={{ width: '102pt', marginTop: 0, marginLeft: 5, marginRight: 5 }}
+				style={{ width: '137pt', marginTop: 0, marginLeft: 5, marginRight: 5 }}
 			/>
 		</MuiPickersUtilsProvider>
 	);

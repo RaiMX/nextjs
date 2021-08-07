@@ -130,7 +130,9 @@ const BlankEditor = observer(function BlankEditor({value, onChange, style = {}})
                 toolbarCustomButtons={[
                     <ToolbarButtonInsertPlaceholder field_type_code={CONSTANTS.TYPE_TEXT_FIELD} label={'Текстовое поле'}/>,
                     <ToolbarButtonInsertPlaceholder field_type_code={CONSTANTS.TYPE_NUMBER_FIELD} label={'Числовое поле'}/>,
-                    <ToolbarButtonInsertPlaceholder field_type_code={CONSTANTS.TYPE_DATE_FIELD} label={'Поле даты'}/>,
+                    <ToolbarButtonInsertPlaceholder field_type_code={CONSTANTS.TYPE_DATE_FIELD} label={'Поле дата'}/>,
+                    <ToolbarButtonInsertPlaceholder field_type_code={CONSTANTS.TYPE_TIME_FIELD} label={'Поле время'}/>,
+                    <ToolbarButtonInsertPlaceholder field_type_code={CONSTANTS.TYPE_DATETIME_FIELD} label={'Поле Дата-Время'}/>,
                     <ToolbarButtonInsertPlaceholder field_type_code={CONSTANTS.TYPE_SELECT_FIELD} label={'Выпадающий список'}/>,
                     <ToolbarButtonInsertPlaceholder field_type_code={CONSTANTS.TYPE_TABLE_FIELD} label={'Таблица'}/>,
                 ]}

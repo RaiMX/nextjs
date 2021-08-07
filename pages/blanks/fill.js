@@ -182,6 +182,8 @@ const BlankFillWrapper = observer(function BlankFillWrapper() {
             })
         }
 
+        blanksStore.fetchSelectLists().then(() => blanksStore.fetchSelectListValues())
+
         return () => {
             blanksStore.clearBlank();
         }

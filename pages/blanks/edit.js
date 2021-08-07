@@ -187,6 +187,8 @@ const BlankEdit = observer(function BlankEdit() {
             setContentObj({ blocks: [], entityMap: {} });
         }
 
+        blanksStore.fetchSelectLists();
+
         return () => {
             blanksStore.clearBlank();
         }

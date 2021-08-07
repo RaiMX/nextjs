@@ -77,27 +77,37 @@ const Index = observer(function Index() {
 		>
 			<Grid item xs={12} md={6}>
 				<MaterialTable
-					title="Шаблоны форм"
+					title="Пользователи"
 					tableRef={tableRef}
 					columns={[
-						{
-							title: 'Версия',
-							field: 'version',
-							type: 'numeric'
-						},
 						{
 							title: 'Название',
 							field: 'name',
 							type: 'string'
 						},
+						{
+							title: 'Email',
+							field: 'email',
+							type: 'string'
+						},
+						{
+							title: 'Администратор',
+							field: 'isAdmin',
+							type: 'boolean'
+						},
+						{
+							title: 'Супер Администратор',
+							field: 'isSuperAdmin',
+							type: 'boolean'
+						},
 					]}
 					data={query => {
 						return new Promise((resolve, reject) => {
-							api.get('/blanks/list-templates').then(response => {
+							api.get('/users').then(response => {
 								resolve({
-									data: response.data.results,
+									data: response.data,
 									page: query.page,
-									totalCount: response.data.count,
+									totalCount: response.data.length,
 								})
 							})
 								.catch(error => {
@@ -135,7 +145,7 @@ const Index = observer(function Index() {
 							</div>,
 							tooltip: intl.formatMessage({ id: 'Редактировать' }),
 							onClick: (event, rowData) => {
-								Router.push(`/blanks/edit?id=${rowData.id}`)
+								Router.push(`/admin/users/edit?id=${rowData.id}`)
 							}
 						},
 						{

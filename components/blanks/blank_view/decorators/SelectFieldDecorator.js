@@ -2,6 +2,7 @@ import React from 'react';
 
 /** COMPONENTS */
 import {useStore} from 'store/store_provider'
+import * as CONSTANTS from "components/blanks/CONSTANTS";
 
 /** THIRD PARTY */
 import {observer} from "mobx-react-lite";
@@ -28,12 +29,12 @@ const SelectFieldDecorator = observer(function SelectFieldDecorator({entity_prop
 	}, [blanksStore.entities_props[entity_props.code]['value']])
 
 	return (
-		<Tooltip title={entity_props.description || null} placement="right-end">
+		<Tooltip title={entity_props.description || CONSTANTS.FIELD_TYPES.find(x => x.code === CONSTANTS.TYPE_SELECT_FIELD).label} placement="right-end">
 			<Select
 				value={value || ''}
 				autoWidth
 				size="small"
-				style={{marginTop: -10, marginLeft: 5, marginRight: 5}}
+				style={{marginTop: -5, marginLeft: 5, marginRight: 5}}
 				onChange={(e) => {
 					blanksStore.setEntityValue(entity_props.code, {
 						value: e.target.value
@@ -41,7 +42,7 @@ const SelectFieldDecorator = observer(function SelectFieldDecorator({entity_prop
 				}}
 			>
 				{blanksStore.select_lists[entity_props.list_code] && blanksStore.select_lists[entity_props.list_code]['values'].map((list, index) => (
-					<MenuItem key={index} value={list.value}>{list.label}</MenuItem>
+					<MenuItem key={index} value={list.id}>{list.name}</MenuItem>
 				))}
 			</Select>
 		</Tooltip>

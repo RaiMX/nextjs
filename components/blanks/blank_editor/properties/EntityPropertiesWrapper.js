@@ -1,19 +1,21 @@
 import React from 'react';
 
 /** COMPONENTS */
-import {useStore} from 'store/store_provider'
+import { useStore } from 'store/store_provider'
 import * as CONSTANTS from "../../CONSTANTS"
 import SelectFieldProperties from "./SelectFieldProperties";
 import TextFieldProperties from "./TextFieldProperties";
 import NumberFieldProperties from "./NumberFieldProperties";
 import DateFieldProperties from "./DateFieldProperties";
+import TimeFieldProperties from "./TimeFieldProperties";
+import DateTimeFieldProperties from "./DateTimeFieldProperties";
 import TableFieldProperties from "./TableFieldProperties";
 
 /** THIRD PARTY */
-import {observer} from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 
 /** MATERIAL */
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 const EntityPropertiesWrapper = observer(function EntityProperties() {
 	const classes = useStyles();
-	const {blanksStore} = useStore();
+	const { blanksStore } = useStore();
 
 	const [entity_code, setEntityCode] = React.useState(null);
 	const [entity_properties, setEntityProperties] = React.useState(null);
@@ -39,15 +41,19 @@ const EntityPropertiesWrapper = observer(function EntityProperties() {
 	if (entity_code) {
 		switch (entity_properties.type) {
 			case CONSTANTS.TYPE_SELECT_FIELD:
-				return <SelectFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
+				return <SelectFieldProperties entity_code={entity_code} entity_properties={entity_properties} />
 			case CONSTANTS.TYPE_TEXT_FIELD:
-				return <TextFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
+				return <TextFieldProperties entity_code={entity_code} entity_properties={entity_properties} />
 			case CONSTANTS.TYPE_NUMBER_FIELD:
-				return <NumberFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
+				return <NumberFieldProperties entity_code={entity_code} entity_properties={entity_properties} />
 			case CONSTANTS.TYPE_DATE_FIELD:
-				return <DateFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
+				return <DateFieldProperties entity_code={entity_code} entity_properties={entity_properties} />
+			case CONSTANTS.TYPE_TIME_FIELD:
+				return <TimeFieldProperties entity_code={entity_code} entity_properties={entity_properties} />
+			case CONSTANTS.TYPE_DATETIME_FIELD:
+				return <DateTimeFieldProperties entity_code={entity_code} entity_properties={entity_properties} />
 			case CONSTANTS.TYPE_TABLE_FIELD:
-				return <TableFieldProperties entity_code={entity_code} entity_properties={entity_properties}/>
+				return <TableFieldProperties entity_code={entity_code} entity_properties={entity_properties} />
 			default:
 				return null;
 		}

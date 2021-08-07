@@ -60,7 +60,7 @@ const SelectFieldElement = observer(function SelectFieldElement({entity_props}) 
 						}}
 					>
 						{blanksStore.select_lists[entity_props.list_code] && blanksStore.select_lists[entity_props.list_code]['values'].map((list, index) => (
-							<MenuItem key={index} value={list.value}>{list.label}</MenuItem>
+							<MenuItem key={index} value={list.id}>{list.name}</MenuItem>
 						))}
 					</Select>
 				</FormControl>

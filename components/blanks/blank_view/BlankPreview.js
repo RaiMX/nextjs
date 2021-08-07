@@ -2,16 +2,22 @@ import React from 'react';
 import dynamic from "next/dynamic";
 
 /** COMPONENTS */
+import {useStore} from 'store/store_provider'
 import {decorators} from "./decorators/form_decorators";
 
 /** THIRD PARTY */
 import {convertFromRaw, convertToRaw, EditorState} from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import useSWR from 'swr';
+
+/** UTILS */
+import { fetcher } from 'utils/axios';
 
 /** DYNAMIC IMPORT */
 const Editor = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor), {ssr: false})
 
 export default function BlankPreview({blank, value, onChange, style = {}}) {
+    const {blanksStore} = useStore();
 
     const getInitialContent = () => {
         if (value) {
@@ -33,25 +39,33 @@ export default function BlankPreview({blank, value, onChange, style = {}}) {
     }
 
     const [editorState, setEditorState] = React.useState(getInitialContent);
+    const [lists_ready, setListsReady] = React.useState(false);
 
     React.useEffect(() => {
         setEditorState(getInitialContent);
     }, [value]);
 
+    React.useEffect(() => {
+        blanksStore.fetchSelectListValues().then(() => {
+            setListsReady(true);
+        })
+    }, [])
+
     return (
         <div style={{...style}}>
-            <Editor
+            {lists_ready ? <Editor
                 editorKey={'blank_form'}
                 readOnly={true}
                 localization={{locale: 'ru',}}
                 editorState={editorState}
                 customDecorators={decorators}
+                editorStyle={{lineHeight: '25pt'}}
                 onChange={(editorState) => {
                     console.log('CHANGED!')
                     onChange(convertToRaw(editorState.getCurrentContent()))
                 }}
                 toolbarHidden
-            />
+            /> : null}
         </div>
     );
 }

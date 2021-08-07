@@ -97,3 +97,5 @@ api.interceptors.request.use(addProgressBar);
 api.interceptors.response.use(processResponse, consoleResponseError);
 
 export default api;
+
+export const fetcher = url => api.get(url).then(res => res.data)

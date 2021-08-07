@@ -145,6 +145,13 @@ export const menu = [
     {
         id: 8,
         parent: 7,
+        name: 'Пользователи',
+        name_kk: 'Пользователи',
+        to: '/admin/users'
+    },
+    {
+        id: 9,
+        parent: 7,
         name: 'Списки',
         name_kk: 'Списки',
         to: '/admin/generic-lists'

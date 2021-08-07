@@ -1,6 +1,7 @@
 import React from 'react';
 
 /** COMPONENTS */
+import * as CONSTANTS from "components/blanks/CONSTANTS";
 import {useStore} from 'store/store_provider'
 
 /** THIRD PARTY */
@@ -28,13 +29,13 @@ const TextFieldDecorator = observer(function TextFieldDecorator({entity_props}) 
 	}, [blanksStore.entities_props[entity_props.code]['value']])
 
 	return (
-		<Tooltip title={entity_props.description || null} placement="bottom">
+		<Tooltip title={entity_props.description || CONSTANTS.FIELD_TYPES.find(x => x.code === CONSTANTS.TYPE_TEXT_FIELD).label} placement="bottom">
 			<TextField
 				error={entity_props?.allow_null === false && (value === undefined || value === '')}
 				// label={entity_props?.allow_null === false && (value === undefined || value === '') ? 'Обязательно' : ''}
 				multiline
 				size="small"
-				style={{width: value?.length * 9 + 20 || 200, maxWidth: 1000, marginTop: -5, marginLeft: 5, marginRight: 5}}
+				style={{width: value?.length * 9 + 20 || 200, maxWidth: 1000, marginTop: 0, marginLeft: 5, marginRight: 5}}
 				value={value || ''}
 				// helperText={entity_props.description || null}
 				onChange={(e) => {

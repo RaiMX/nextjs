@@ -1,6 +1,7 @@
 import React from 'react';
 
 /** COMPONENTS */
+import * as CONSTANTS from "components/blanks/CONSTANTS";
 import {useStore} from 'store/store_provider'
 import {buildNestedHeaders, makeTree} from "../../blanks_utils";
 
@@ -49,7 +50,6 @@ const TableFieldDecorator = observer(function TableFieldDecorator({entity_props}
 	}
 
 	const buildTableColHeaders = (table_col_headers) => {
-		console.log('input col headers', table_col_headers.length)
 		const {tree, flat, num_levels} = makeTree(table_col_headers, 'id', 'pid');
 		const _nested_headers = buildNestedHeaders(flat, num_levels);
 
@@ -61,8 +61,6 @@ const TableFieldDecorator = observer(function TableFieldDecorator({entity_props}
 		if (blanksStore.entities_props[entity_props.code]['table_show_cols_number']) {
 			_nested_headers.push((new Array(_max_cols).fill(0)).map((x, index) => (index + 1)));
 		}
-
-		console.log('buildTableColHeaders', _max_cols);
 
 		setNestedHeaders(_nested_headers);
 		setMaxCols(_max_cols);
@@ -78,10 +76,6 @@ const TableFieldDecorator = observer(function TableFieldDecorator({entity_props}
 			const hot_data = hot.getData();
 			const hot_meta = hot.getCellsMeta();
 
-			console.log('change', change)
-			console.log('hot_data', hot_data)
-			console.log('hot_meta', hot_meta)
-
 			blanksStore.setEntityValue(entity_props.code, hot_data);
 		}
 	}
@@ -94,20 +88,14 @@ const TableFieldDecorator = observer(function TableFieldDecorator({entity_props}
 
 	React.useEffect(() => {
 		buildTableColHeaders(blanksStore.entities_props[entity_props.code]['table_col_headers']);
-		console.log('headers or data changed')
 	}, [
 		blanksStore.entities_props[entity_props.code]['table_col_headers'],
 		blanksStore.entities_props[entity_props.code]['table_col_headers_data'],
 	])
 
 	React.useEffect(() => {
-		console.log('initial render')
 		buildTableColHeaders(blanksStore.entities_props[entity_props.code]['table_col_headers']);
 	}, [])
-
-	console.log('table data', value);
-	console.log('table cols', nested_headers);
-	console.log('table settings', settings);
 
 	if (!value || value.length === 0 || max_cols !== value[0].length) {
 		const empty_row_data = new Array(max_cols);

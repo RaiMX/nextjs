@@ -10,13 +10,13 @@ import { observer } from "mobx-react-lite";
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { FormControl, Grid, TextField } from "@material-ui/core";
+import ScheduleIcon from '@material-ui/icons/Schedule';
 
 import ruLocale from "date-fns/locale/ru";
 import DateFnsUtils from '@date-io/date-fns';
 import {
 	MuiPickersUtilsProvider,
 	KeyboardTimePicker,
-	KeyboardDatePicker,
 } from '@material-ui/pickers';
 
 
@@ -35,11 +35,18 @@ const DateFieldElement = observer(function DateFieldElement({ entity_props }) {
 	const classes = useStyles();
 	const { blanksStore } = useStore();
 
-	const [value, setValue] = React.useState(entity_props?.value?.value ? entity_props.value.value : undefined);
+	const buildTime = value => {
+		const hours = value.split(':')[0];
+		const minutes = value.split(':')[1];
+		const time = (new Date()).setHours(hours, minutes, 0);
+		return time;
+	}
+
+	const [value, setValue] = React.useState(entity_props?.value?.value ? buildTime(entity_props.value.value) : undefined);
 
 	React.useEffect(() => {
 		if (blanksStore.entities_props[entity_props.code]['value']) {
-			setValue(blanksStore.entities_props[entity_props.code]['value']['value']);
+			setValue(buildTime(blanksStore.entities_props[entity_props.code]['value']['value']));
 		}
 	}, [blanksStore.entities_props[entity_props.code]['value']])
 
@@ -57,25 +64,26 @@ const DateFieldElement = observer(function DateFieldElement({ entity_props }) {
 			<Grid item xs={12} md={6}>
 				<FormControl className={classes.formControl}>
 					<MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
-						<KeyboardDatePicker
-							autoOk
+						<KeyboardTimePicker
+							ampm={false}
+							placeholder="09:00"
+							mask="__:__"
 							size="small"
-							disableToolbar
 							variant="inline"
-							format="dd.MM.yyyy"
 							margin="normal"
 							value={value || null}
 							title={entity_props.description || null}
 							onChange={(_date) => {
 								blanksStore.setEntityValue(entity_props.code, {
-									value: _date
+									value: ("0" + _date.getHours()).slice(-2) + ':' + ("0" + _date.getMinutes()).slice(-2)
 								})
 							}}
+							keyboardIcon={<ScheduleIcon />}
 							KeyboardButtonProps={{
 								'aria-label': 'change date',
 							}}
 							error={entity_props?.allow_null === false && (value === undefined || value === '')}
-							style={{ marginTop: 0, marginLeft: 5, marginRight: 5 }}
+							style={{ marginTop: 10, marginLeft: 5, marginRight: 5 }}
 						/>
 					</MuiPickersUtilsProvider>
 				</FormControl>

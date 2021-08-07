@@ -15,8 +15,7 @@ import ruLocale from "date-fns/locale/ru";
 import DateFnsUtils from '@date-io/date-fns';
 import {
 	MuiPickersUtilsProvider,
-	KeyboardTimePicker,
-	KeyboardDatePicker,
+	KeyboardDateTimePicker,
 } from '@material-ui/pickers';
 
 
@@ -57,12 +56,11 @@ const DateFieldElement = observer(function DateFieldElement({ entity_props }) {
 			<Grid item xs={12} md={6}>
 				<FormControl className={classes.formControl}>
 					<MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
-						<KeyboardDatePicker
-							autoOk
+						<KeyboardDateTimePicker
 							size="small"
-							disableToolbar
 							variant="inline"
-							format="dd.MM.yyyy"
+							ampm={false}
+							format="dd.MM.yyyy HH:mm"
 							margin="normal"
 							value={value || null}
 							title={entity_props.description || null}

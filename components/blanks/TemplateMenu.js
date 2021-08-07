@@ -1,0 +1,61 @@
+import React from 'react';
+import Router from 'next/router';
+
+/** THIRD PARTY */
+import {observer} from "mobx-react-lite";
+
+/** HOOKS */
+import {useStore} from 'store/store_provider'
+
+/** COMPONENTS */
+import {STATIC_ROUTES} from "utils/CONSTANTS";
+import {logout} from "utils/auth";
+
+/** MATERIAL */
+import {makeStyles} from '@material-ui/core/styles';
+import {ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper} from "@material-ui/core";
+import {FormattedMessage} from "react-intl";
+
+
+const useStyles = makeStyles((theme) => ({
+	root: {}
+}))
+
+const TemplateMenu = observer(function TemplateMenu({ template, open, anchor, onClose}) {
+	const classes = useStyles();
+	const store = useStore();
+
+	const handleProfileClose = () => {
+		onClose()
+	}
+
+	const routeToUserProfile = () => {
+		handleProfileClose();
+		Router.push(STATIC_ROUTES.USER);
+	}
+
+	if(!template) return null;
+
+	return (
+		<Popper style={{zIndex: 1000 }} open={open} anchorEl={anchor} role={undefined} transition disablePortal>
+			{({TransitionProps, placement}) => (
+				<Grow
+					{...TransitionProps}
+					style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
+				>
+					<Paper>
+						<ClickAwayListener onClickAway={handleProfileClose}>
+							<MenuList autoFocusItem={open} id="menu-list-grow">
+								<MenuItem >{template.id}</MenuItem>
+								<MenuItem onClick={routeToUserProfile}><FormattedMessage defaultMessage="Личный кабинет"/></MenuItem>
+								<MenuItem onClick={logout}><FormattedMessage defaultMessage="Выйти"/></MenuItem>
+							</MenuList>
+						</ClickAwayListener>
+					</Paper>
+				</Grow>
+			)}
+		</Popper>
+	);
+})
+
+export default TemplateMenu

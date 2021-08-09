@@ -81,11 +81,6 @@ const Index = observer(function Index() {
 					tableRef={tableRef}
 					columns={[
 						{
-							title: 'Название',
-							field: 'name',
-							type: 'string'
-						},
-						{
 							title: 'Email',
 							field: 'email',
 							type: 'string'

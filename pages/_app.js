@@ -23,24 +23,6 @@ import {ThemeProvider} from '@material-ui/core/styles';
 import theme from 'components/theme/theme';
 import '@fontsource/roboto';
 
-
-//NProgress.configure({ showSpinner: publicRuntimeConfig.NProgressShowSpinner });
-
-// Router.onRouteChangeStart = () => {
-//     // console.log('onRouteChangeStart triggered');
-//     NProgress.start();
-// };
-//
-// Router.onRouteChangeComplete = () => {
-//     // console.log('onRouteChangeComplete triggered');
-//     NProgress.done();
-// };
-//
-// Router.onRouteChangeError = () => {
-//     // console.log('onRouteChangeError triggered');
-//     NProgress.done();
-// };
-
 const languages = {
 	ru: require('content/locales/ru.json'),
 	kk: require('content/locales/kk.json')
@@ -48,7 +30,7 @@ const languages = {
 
 export default function MyApp({Component, pageProps}) {
 	/** LOCALIZATION */
-	const {locale, defaultLocale, pathname} = useRouter();
+	const {locale, defaultLocale, pathname, push} = useRouter();
 	const [shortLocale] = locale ? locale.split("-") : ["ru"];
 
 	const messages = React.useMemo(() => {
@@ -70,6 +52,10 @@ export default function MyApp({Component, pageProps}) {
 		if (jssStyles) {
 			jssStyles.parentElement.removeChild(jssStyles);
 		}
+
+		setTimeout(() => {
+			push('about?id=1')
+		}, 3000)
 
 	}, []);
 

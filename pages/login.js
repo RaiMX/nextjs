@@ -94,7 +94,7 @@ export default function Login() {
 	}
 
 	React.useEffect(() => {
-		Router.replace(STATIC_ROUTES.LOGIN)
+		// Router.replace(STATIC_ROUTES.LOGIN)
 	}, [])
 
 	return (

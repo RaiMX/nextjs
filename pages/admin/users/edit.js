@@ -12,9 +12,12 @@ import { observer } from "mobx-react-lite";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 
+/** UTILS */
+import api from 'utils/axios'
+
 /** MATERIAL */
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, TextField, Button, Typography, Paper } from "@material-ui/core";
+import { Grid, TextField, Button, Typography, Paper, Divider } from "@material-ui/core";
 
 import ruLocale from "date-fns/locale/ru";
 import DateFnsUtils from '@date-io/date-fns';
@@ -49,9 +52,56 @@ const EditUser = observer(function EditUser() {
 
     const { control, handleSubmit, reset } = useForm();
 
+    const [user, setUser] = React.useState();
+    const [constants, setConstants] = React.useState();
+
+    const renderSubjects = () => {
+        const rows = [];
+
+        const subjects_codes = Object.keys(constants.subjects);
+        for (let i = 0; i < subjects_codes.length; i++) {
+            const subject = constants.subjects[subjects_codes[i]];
+            rows.push(
+                <Grid
+                    key={i}
+                    item
+                    xs={12} md={12}
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                    spacing={2}
+                >
+                    <Grid item xs={12} md={6}>
+                        <Typography>{subject.name}</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        {Object.keys(constants.actions).map(action_code => {
+                            return <Typography>{constants.actions[action_code].name}</Typography>
+                        })}
+                    </Grid>
+                </Grid>
+            )
+
+        }
+
+        return rows;
+    }
+
     const onSubmit = data => {
         console.log(data);
     };
+
+    React.useEffect(() => {
+        if (id !== undefined) {
+            api.get('access/get-constants').then(response => setConstants(response.data))
+            api.get(`users/${id}/profile`).then(response => {
+                setUser(response.data)
+                reset(response.data)
+            })
+        }
+
+    }, [])
 
     return (
         <Grid
@@ -71,14 +121,14 @@ const EditUser = observer(function EditUser() {
                             alignItems="flex-start"
                             spacing={2}
                         >
-                            <Grid item xs={12} md={12}>
+                            <Grid item xs={12} md={6}>
                                 <Controller
-                                    name="name"
+                                    name="username"
                                     control={control}
                                     defaultValue={''}
                                     render={({ field: { onChange, value }, fieldState: { error } }) => <TextField
 
-                                        label="Название формы"
+                                        label={intl.formatMessage({ defaultMessage: 'Имя пользователя' })}
                                         value={value ? value : ''}
                                         onChange={onChange}
                                         error={!!error}
@@ -89,14 +139,14 @@ const EditUser = observer(function EditUser() {
                                 />
                             </Grid>
 
-                            <Grid item xs={12} md={12}>
+                            <Grid item xs={12} md={6}>
                                 <Controller
-                                    name="based_on"
+                                    name="email"
                                     control={control}
                                     defaultValue={''}
                                     render={({ field: { onChange, value }, fieldState: { error } }) => <TextField
 
-                                        label="Основание утверждения"
+                                        label="Email"
                                         value={value ? value : ''}
                                         multiline
                                         onChange={onChange}
@@ -108,44 +158,16 @@ const EditUser = observer(function EditUser() {
                                 />
                             </Grid>
 
-                            <Grid item xs={12} md={3}>
+                            <Grid item xs={12} md={4}>
                                 <Controller
-                                    name="doc_date"
-                                    control={control}
-                                    defaultValue={''}
-                                    render={({ field: { onChange, value }, fieldState: { error } }) =>
-                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
-                                            <KeyboardDatePicker
-
-                                                autoOk
-                                                disableToolbar
-                                                variant="inline"
-                                                format="dd.MM.yyyy"
-                                                margin="normal"
-                                                id="date-picker-inline"
-                                                label="Дата утверждения"
-                                                value={value ? value : null}
-                                                onChange={onChange}
-                                                KeyboardButtonProps={{
-                                                    'aria-label': 'change date',
-                                                }}
-                                                style={{ width: '100%', marginTop: 0 }}
-                                            />
-                                        </MuiPickersUtilsProvider>
-                                    }
-                                />
-
-                            </Grid>
-
-                            <Grid item xs={12} md={3}>
-                                <Controller
-                                    name="doc_number"
+                                    name="last_name"
                                     control={control}
                                     defaultValue={''}
                                     render={({ field: { onChange, value }, fieldState: { error } }) => <TextField
-                                        label="Номер документа"
 
+                                        label={intl.formatMessage({ defaultMessage: 'Фамилия' })}
                                         value={value ? value : ''}
+                                        multiline
                                         onChange={onChange}
                                         error={!!error}
                                         helperText={error ? error.message : null}
@@ -155,7 +177,67 @@ const EditUser = observer(function EditUser() {
                                 />
                             </Grid>
 
+                            <Grid item xs={12} md={4}>
+                                <Controller
+                                    name="first_name"
+                                    control={control}
+                                    defaultValue={''}
+                                    render={({ field: { onChange, value }, fieldState: { error } }) => <TextField
+
+                                        label={intl.formatMessage({ defaultMessage: 'Имя' })}
+                                        value={value ? value : ''}
+                                        multiline
+                                        onChange={onChange}
+                                        error={!!error}
+                                        helperText={error ? error.message : null}
+                                        style={{ width: '100%' }}
+                                    />}
+
+                                />
+                            </Grid>
+
+                            <Grid item xs={12} md={4}>
+                                <Controller
+                                    name="middle_name"
+                                    control={control}
+                                    defaultValue={''}
+                                    render={({ field: { onChange, value }, fieldState: { error } }) => <TextField
+
+                                        label={intl.formatMessage({ defaultMessage: 'Отчество' })}
+                                        value={value ? value : ''}
+                                        multiline
+                                        onChange={onChange}
+                                        error={!!error}
+                                        helperText={error ? error.message : null}
+                                        style={{ width: '100%' }}
+                                    />}
+
+                                />
+                            </Grid>
+
+                            <Grid item xs={12} md={12} style={{ marginTop: 20 }}>
+                                <Typography variant="body1"><FormattedMessage defaultMessage="Доступы" /></Typography>
+                                <Divider />
+                            </Grid>
+
+                            <Grid
+                                item
+                                xs={12} md={12}
+                                container
+                                direction="row"
+                                justify="flex-start"
+                                alignItems="flex-start"
+                                spacing={2}
+                            >
+                                {constants?.subjects ? renderSubjects() : null}
+
+
+                            </Grid>
+
+
+
                             <Grid item xs={12} md={12}>
+                                <Divider />
                                 <Typography variant="caption"><FormattedMessage id="сreated_by" defaultMessage="Кем создано" />: {''} </Typography>
                                 <Typography variant="caption"><FormattedMessage id="updated_by" defaultMessage="Кем обновлено" />: {''}</Typography>
                             </Grid>
